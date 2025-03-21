@@ -1,0 +1,53 @@
+{
+  "personalInfo": {
+    "name": "Rohan Kumar Jain",
+    "dob": "1992-07-15",
+    "address": "Flat No. 301, Sri Ram Apartments, Sector 11, Noida, Uttar Pradesh, 201301",
+    "phone": "+91 98101 23456",
+    "email": "rohan.jain1992@gmail.com",
+    "panNumber": "ABXXX1234F",
+    "aadhaarNumber": "XXXX-XXXX-9012"
+  },
+  "scores": {
+    "raw": {
+      "cibil": 820,
+      "experian": 742,
+      "equifax": 739
+    },
+    "normalized": {
+      "cibil": 867,
+      "experian": 804,
+      "equifax": 805
+    },
+    "unified": 829
+  },
+  "creditUtilization": {
+    "ratio": 0.35,
+    "percentage": 35,
+    "impact": "Moderate"
+  },
+  "repaymentHistory": {
+    "totalPayments": 26,
+    "timelyPayments": 24,
+    "latePayments": 2,
+    "impact": "Moderate Impact"
+  },
+  "creditMix": {
+    "loans": {
+      "home_loan": 1500000,
+      "car_loan": 500000,
+      "personal_loan": 200000
+    },
+    "count": 3,
+    "impact": "Positive"
+  },
+  "hardInquiries": {
+    "count": 3,
+    "impact": "Minor Impact"
+  },
+  "negativeRemarks": {
+    "remarks": "None",
+    "impact": "No Impact"
+  },
+  "riskProfile": "Very Low Risk - Excellent for Premium Credit Products"
+}
