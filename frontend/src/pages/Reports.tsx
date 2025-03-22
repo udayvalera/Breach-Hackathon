@@ -16,8 +16,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+} from "../components/ui/card";
+import { Button } from "../components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -25,14 +25,14 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "../components/ui/dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "../components/ui/select";
 import {
   Table,
   TableBody,
@@ -40,10 +40,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Download, Filter } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from "../components/ui/table";
+import { Badge } from "../components/ui/badge";
+import { Download, Filter, Shield } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 
 // Register Chart.js components
 ChartJS.register(
@@ -72,7 +72,6 @@ const mockTrendsData = {
 };
 
 const Reports: React.FC = () => {
-  // State for filters, modals, and filtered data
   const [lookupHistory, setLookupHistory] = useState(mockLookupHistory);
   const [dateRange, setDateRange] = useState("Last 7 Days");
   const [riskLevel, setRiskLevel] = useState("All");
@@ -80,7 +79,6 @@ const Reports: React.FC = () => {
   const [showExportModal, setShowExportModal] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
 
-  // Filter logic (mocked)
   const applyFilters = () => {
     let filtered = [...mockLookupHistory];
     if (riskLevel !== "All") {
@@ -90,7 +88,6 @@ const Reports: React.FC = () => {
         return entry.score < 600;
       });
     }
-    // Simulate date range filter (simplified for demo)
     if (dateRange === "Last 3 Days") {
       filtered = filtered.filter((entry) => new Date(entry.date) >= new Date("2025-03-19"));
     }
@@ -98,7 +95,6 @@ const Reports: React.FC = () => {
     setShowFilterModal(false);
   };
 
-  // Reset filters
   const resetFilters = () => {
     setDateRange("Last 7 Days");
     setRiskLevel("All");
@@ -106,7 +102,6 @@ const Reports: React.FC = () => {
     setShowFilterModal(false);
   };
 
-  // Mock export functions
   const exportToCSV = () => {
     const csv = "Name,Score,Date,Status\n" + lookupHistory.map((entry) => `${entry.name},${entry.score},${entry.date},${entry.status}`).join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
@@ -118,20 +113,18 @@ const Reports: React.FC = () => {
   };
 
   const exportToPDF = () => {
-    // For demo, simulate PDF export with alert
     alert("PDF export triggered! In a real app, this would generate a PDF.");
     setShowExportModal(false);
   };
 
-  // Trends graph data
   const chartData = {
     labels: mockTrendsData.labels,
     datasets: [
       {
         label: "Average Unified Score",
         data: mockTrendsData.scores,
-        borderColor: "hsl(221.2 83.2% 53.3%)",
-        backgroundColor: "hsla(221.2 83.2% 53.3%, 0.2)",
+        borderColor: "#8b5cf6", // Vibrant purple
+        backgroundColor: "rgba(139, 92, 246, 0.2)",
         fill: true,
         tension: 0.3,
       },
@@ -148,50 +141,53 @@ const Reports: React.FC = () => {
       y: {
         beginAtZero: false,
         min: 500,
+        grid: { color: "rgba(139, 92, 246, 0.1)" },
       },
+      x: { grid: { color: "rgba(139, 92, 246, 0.1)" } },
     },
   };
 
-  // Summary stats
   const approvalRate = Math.round(
     (lookupHistory.filter((entry) => entry.status === "Approved").length / lookupHistory.length) * 100
   );
   const avgScore = Math.round(
     lookupHistory.reduce((sum, entry) => sum + entry.score, 0) / lookupHistory.length
   );
-  const avgProcessingTime = 12; // Mocked value in seconds
+  const avgProcessingTime = 12;
 
-  // Status badge renderer
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "Approved":
-        return <Badge className="bg-green-500 hover:bg-green-600">{status}</Badge>;
+        return <Badge className="bg-green-400 text-green-900 hover:bg-green-500">{status}</Badge>;
       case "Denied":
-        return <Badge className="bg-red-500 hover:bg-red-600">{status}</Badge>;
+        return <Badge className="bg-red-400 text-red-900 hover:bg-red-500">{status}</Badge>;
       case "Review":
-        return <Badge className="bg-yellow-500 hover:bg-yellow-600">{status}</Badge>;
+        return <Badge className="bg-yellow-400 text-yellow-900 hover:bg-yellow-500">{status}</Badge>;
       default:
-        return <Badge>{status}</Badge>;
+        return <Badge className="bg-gray-400 text-gray-900">{status}</Badge>;
     }
   };
 
   return (
-    <div className="p-6 bg-slate-50 min-h-screen">
+    <div className="p-6 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-800">Credit Reports</h1>
-          <p className="text-slate-500">View and analyze credit lookup data</p>
+        <div className="flex items-center">
+          <Shield className="h-8 w-8 text-blue-600 mr-3" />
+          <div>
+            <h1 className="text-3xl font-bold text-blue-800">Credit Reports</h1>
+            <p className="text-blue-600">Securely view and analyze credit lookup data</p>
+          </div>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setShowFilterModal(true)}>
+          <Button variant="outline" className="border-blue-300 text-blue-600 hover:bg-blue-100" onClick={() => setShowFilterModal(true)}>
             <Filter className="mr-2 h-4 w-4" />
             Filter
           </Button>
-          <Button variant="outline" onClick={exportToCSV}>
+          <Button variant="outline" className="border-green-300 text-green-600 hover:bg-green-100" onClick={exportToCSV}>
             <Download className="mr-2 h-4 w-4" />
             CSV
           </Button>
-          <Button variant="default" onClick={() => setShowExportModal(true)}>
+          <Button className="bg-purple-600 hover:bg-purple-700 text-white" onClick={() => setShowExportModal(true)}>
             <Download className="mr-2 h-4 w-4" />
             PDF
           </Button>
@@ -199,89 +195,99 @@ const Reports: React.FC = () => {
       </div>
 
       <Tabs defaultValue="overview" className="mb-6" onValueChange={setActiveTab} value={activeTab}>
-        <TabsList className="mb-4">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="records">All Records</TabsTrigger>
+        <TabsList className="mb-4 bg-blue-100 rounded-lg border-2 border-blue-200">
+          <TabsTrigger value="overview" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">Overview</TabsTrigger>
+          <TabsTrigger value="records" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">All Records</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview">
-          {/* Summary Report Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <Card>
+            <Card className="bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-200">
               <CardHeader className="pb-2">
-                <CardDescription>Approval Rate</CardDescription>
-                <CardTitle className="text-3xl font-bold">{approvalRate}%</CardTitle>
+                <CardDescription className="text-green-700 flex items-center">
+                  <Shield className="h-4 w-4 mr-2" />
+                  Approval Rate
+                </CardDescription>
+                <CardTitle className="text-3xl font-bold text-green-800">{approvalRate}%</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
-                <p className="text-xs text-slate-500">Based on {lookupHistory.length} records</p>
+                <p className="text-xs text-green-600">Based on {lookupHistory.length} records</p>
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200">
               <CardHeader className="pb-2">
-                <CardDescription>Average Score</CardDescription>
-                <CardTitle className="text-3xl font-bold">{avgScore}</CardTitle>
+                <CardDescription className="text-blue-700 flex items-center">
+                  <Shield className="h-4 w-4 mr-2" />
+                  Average Score
+                </CardDescription>
+                <CardTitle className="text-3xl font-bold text-blue-800">{avgScore}</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-blue-600">
                   {avgScore >= 700 ? "Excellent" : avgScore >= 650 ? "Good" : "Fair"} average
                 </p>
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-2 border-purple-200">
               <CardHeader className="pb-2">
-                <CardDescription>Avg Processing Time</CardDescription>
-                <CardTitle className="text-3xl font-bold">{avgProcessingTime}s</CardTitle>
+                <CardDescription className="text-purple-700 flex items-center">
+                  <Shield className="h-4 w-4 mr-2" />
+                  Avg Processing Time
+                </CardDescription>
+                <CardTitle className="text-3xl font-bold text-purple-800">{avgProcessingTime}s</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
-                <p className="text-xs text-slate-500">Response time average</p>
+                <p className="text-xs text-purple-600">Response time average</p>
               </CardContent>
             </Card>
           </div>
 
-          {/* Trends Graph */}
-          <Card className="mb-6">
-            <CardHeader>
+          <Card className="mb-6 bg-white border-2 border-purple-200">
+            <CardHeader className="bg-gradient-to-r from-purple-500 to-purple-700 text-white rounded-t-lg">
               <CardTitle>Score Trends Over Time</CardTitle>
-              <CardDescription>Average unified credit scores for the selected period</CardDescription>
+              <CardDescription className="text-purple-100">
+                Average unified credit scores for the selected period
+              </CardDescription>
             </CardHeader>
-            <CardContent className="pt-0">
+            <CardContent className="pt-0 bg-purple-50 rounded-b-lg">
               <div className="h-64">
                 <Line data={chartData} options={chartOptions} />
               </div>
             </CardContent>
           </Card>
 
-          {/* Recent Lookups */}
-          <Card>
-            <CardHeader>
+          <Card className="bg-white border-2 border-blue-200">
+            <CardHeader className="bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-t-lg">
               <CardTitle>Recent Lookups</CardTitle>
-              <CardDescription>Latest {Math.min(3, lookupHistory.length)} credit lookup records</CardDescription>
+              <CardDescription className="text-blue-100">
+                Latest {Math.min(3, lookupHistory.length)} credit lookup records
+              </CardDescription>
             </CardHeader>
-            <CardContent className="pt-0">
+            <CardContent className="pt-0 bg-blue-50 rounded-b-lg">
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead>Borrower Name</TableHead>
-                    <TableHead>Score</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Status</TableHead>
+                  <TableRow className="bg-blue-100">
+                    <TableHead className="text-blue-800">Borrower Name</TableHead>
+                    <TableHead className="text-blue-800">Score</TableHead>
+                    <TableHead className="text-blue-800">Date</TableHead>
+                    <TableHead className="text-blue-800">Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {lookupHistory.slice(0, 3).map((entry) => (
                     <TableRow key={entry.id}>
-                      <TableCell className="font-medium">{entry.name}</TableCell>
-                      <TableCell>{entry.score}</TableCell>
-                      <TableCell>{entry.date}</TableCell>
+                      <TableCell className="font-medium text-blue-900">{entry.name}</TableCell>
+                      <TableCell className="text-blue-800">{entry.score}</TableCell>
+                      <TableCell className="text-blue-800">{entry.date}</TableCell>
                       <TableCell>{getStatusBadge(entry.status)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
               {lookupHistory.length > 3 && (
-                <Button variant="link" className="mt-2 p-0" onClick={() => setActiveTab("records")}>
+                <Button variant="link" className="mt-2 p-0 text-blue-600 hover:text-blue-800" onClick={() => setActiveTab("records")}>
                   View all {lookupHistory.length} records
                 </Button>
               )}
@@ -290,29 +296,29 @@ const Reports: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="records">
-          <Card>
-            <CardHeader>
+          <Card className="bg-white border-2 border-blue-200">
+            <CardHeader className="bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-t-lg">
               <CardTitle>All Lookup Records</CardTitle>
-              <CardDescription>
+              <CardDescription className="text-blue-100">
                 Complete list of credit lookups ({lookupHistory.length} entries)
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="bg-blue-50 rounded-b-lg">
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead>Borrower Name</TableHead>
-                    <TableHead>Unified Score</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Status</TableHead>
+                  <TableRow className="bg-blue-100">
+                    <TableHead className="text-blue-800">Borrower Name</TableHead>
+                    <TableHead className="text-blue-800">Unified Score</TableHead>
+                    <TableHead className="text-blue-800">Date</TableHead>
+                    <TableHead className="text-blue-800">Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {lookupHistory.map((entry) => (
                     <TableRow key={entry.id}>
-                      <TableCell className="font-medium">{entry.name}</TableCell>
-                      <TableCell>{entry.score}</TableCell>
-                      <TableCell>{entry.date}</TableCell>
+                      <TableCell className="font-medium text-blue-900">{entry.name}</TableCell>
+                      <TableCell className="text-blue-800">{entry.score}</TableCell>
+                      <TableCell className="text-blue-800">{entry.date}</TableCell>
                       <TableCell>{getStatusBadge(entry.status)}</TableCell>
                     </TableRow>
                   ))}
@@ -323,21 +329,23 @@ const Reports: React.FC = () => {
         </TabsContent>
       </Tabs>
 
-      {/* Filter Modal */}
       <Dialog open={showFilterModal} onOpenChange={setShowFilterModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Filter Reports</DialogTitle>
-            <DialogDescription>
+        <DialogContent className="bg-white border-2 border-blue-200">
+          <DialogHeader className="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-t-lg">
+            <DialogTitle className="flex items-center">
+              <Filter className="h-5 w-5 mr-2" />
+              Filter Reports
+            </DialogTitle>
+            <DialogDescription className="text-blue-100">
               Apply filters to customize the displayed records
             </DialogDescription>
           </DialogHeader>
           
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-4 py-4 bg-blue-50 rounded-b-lg">
             <div className="grid gap-2">
-              <label className="text-sm font-medium">Date Range</label>
+              <label className="text-sm font-medium text-blue-800">Date Range</label>
               <Select value={dateRange} onValueChange={setDateRange}>
-                <SelectTrigger>
+                <SelectTrigger className="border-blue-300">
                   <SelectValue placeholder="Select date range" />
                 </SelectTrigger>
                 <SelectContent>
@@ -348,9 +356,9 @@ const Reports: React.FC = () => {
             </div>
 
             <div className="grid gap-2">
-              <label className="text-sm font-medium">Risk Level</label>
+              <label className="text-sm font-medium text-blue- dagger text-blue-800">Risk Level</label>
               <Select value={riskLevel} onValueChange={setRiskLevel}>
-                <SelectTrigger>
+                <SelectTrigger className="border-blue-300">
                   <SelectValue placeholder="Select risk level" />
                 </SelectTrigger>
                 <SelectContent>
@@ -363,34 +371,36 @@ const Reports: React.FC = () => {
             </div>
           </div>
 
-          <DialogFooter>
-            <Button variant="outline" onClick={resetFilters}>Reset</Button>
-            <Button onClick={applyFilters}>Apply Filters</Button>
+          <DialogFooter className="bg-blue-100 rounded-b-lg">
+            <Button variant="outline" className="border-blue-300 text-blue-600 hover:bg-blue-200" onClick={resetFilters}>Reset</Button>
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={applyFilters}>Apply Filters</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Export Preview Modal */}
       <Dialog open={showExportModal} onOpenChange={setShowExportModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Export Preview</DialogTitle>
-            <DialogDescription>
+        <DialogContent className="bg-white border-2 border-purple-200">
+          <DialogHeader className="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-t-lg">
+            <DialogTitle className="flex items-center">
+              <Download className="h-5 w-5 mr-2" />
+              Export Preview
+            </DialogTitle>
+            <DialogDescription className="text-purple-100">
               Preview of the report to be exported as PDF
             </DialogDescription>
           </DialogHeader>
           
-          <div className="bg-slate-100 p-4 rounded-md mb-4 space-y-2">
-            <p><strong>Approval Rate:</strong> {approvalRate}%</p>
-            <p><strong>Average Score:</strong> {avgScore}</p>
-            <p><strong>Entries:</strong> {lookupHistory.length}</p>
+          <div className="bg-purple-50 p-4 rounded-md mb-4 space-y-2">
+            <p className="text-purple-800"><strong>Approval Rate:</strong> {approvalRate}%</p>
+            <p className="text-purple-800"><strong>Average Score:</strong> {avgScore}</p>
+            <p className="text-purple-800"><strong>Entries:</strong> {lookupHistory.length}</p>
           </div>
 
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowExportModal(false)}>
+          <DialogFooter className="bg-purple-100 rounded-b-lg">
+            <Button variant="outline" className="border-purple-300 text-purple-600 hover:bg-purple-200" onClick={() => setShowExportModal(false)}>
               Cancel
             </Button>
-            <Button onClick={exportToPDF}>
+            <Button className="bg-purple-600 hover:bg-purple-700 text-white" onClick={exportToPDF}>
               Confirm Download
             </Button>
           </DialogFooter>

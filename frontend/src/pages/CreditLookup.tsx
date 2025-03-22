@@ -1,25 +1,68 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Loader2, Shield, Download, CreditCard, ArrowLeft, FileText } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "../components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card";
+import { Input } from "../components/ui/input";
+import { Textarea } from "../components/ui/textarea";
+import { Label } from "../components/ui/label";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../components/ui/dialog";
+import { Badge } from "../components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 
-// Mock bureau data
+
+// Gauge Component
+interface GaugeProps {
+  value: number;
+  min: number;
+  max: number;
+  label?: string;
+}
+
+const Gauge: React.FC<GaugeProps> = ({ value, min, max, label }) => {
+  const percentage = ((value - min) / (max - min)) * 100;
+  const angle = (percentage / 100) * 180 - 90;
+
+  return (
+    <div className="relative w-40 h-20">
+      <svg className="absolute w-full h-full" viewBox="0 0 100 50">
+        <path d="M 10 45 A 40 40 0 0 1 90 45" fill="none" stroke="#e5e7eb" strokeWidth="8" />
+        <path
+          d="M 10 45 A 40 40 0 0 1 90 45"
+          fill="none"
+          stroke="#a78bfa" // Lighter purple shade
+          strokeWidth="8"
+          strokeDasharray="125.6"
+          strokeDashoffset={125.6 * (1 - percentage / 100)}
+        />
+      </svg>
+      <div
+        className="absolute w-1 h-16 bg-purple-400 origin-bottom" // Lighter needle color
+        style={{ left: "50%", bottom: "10%", transform: `translateX(-50%) rotate(${angle}deg)` }}
+      />
+      <div className="absolute inset-x-0 bottom-0 flex justify-between text-sm text-gray-800 font-semibold">
+        <span>{min}</span>
+        <span>{max}</span>
+      </div>
+      <div className="absolute inset-x-0 top-8 text-center text-lg font-bold text-purple-600">{value}</div>
+      {label && <div className="absolute inset-x-0 top-14 text-center text-sm text-purple-500">{label}</div>}
+    </div>
+  );
+};
+
+// Mock bureau data (all bureaus working)
 const mockBureauData = [
-  { bureau: "CIBIL", score: 750, status: "Online", lastUpdated: "2025-03-21T10:30:00", history: [
-    { type: "Loan", status: "Active", amount: 500000 },
-    { type: "Credit Card", status: "Closed", amount: 100000 },
+  { bureau: "Equifax", score: 720, status: "Online", lastUpdated: "2025-03-21T10:30:00", history: [
+    { type: "Loan", status: "Active", amount: 400000 },
+    { type: "Credit Card", status: "Closed", amount: 80000 },
   ]},
-  { bureau: "Experian", score: 780, status: "Online", lastUpdated: "2025-03-20T15:45:00", history: [
-    { type: "Home Loan", status: "Active", amount: 2000000 },
-    { type: "Personal Loan", status: "Active", amount: 300000 },
+  { bureau: "TransUnion", score: 760, status: "Online", lastUpdated: "2025-03-20T15:45:00", history: [
+    { type: "Home Loan", status: "Active", amount: 1800000 },
+    { type: "Personal Loan", status: "Active", amount: 250000 },
   ]},
-  { bureau: "Equifax", score: null, status: "Offline", lastUpdated: "2025-03-21T10:30:00", history: [] },
+  { bureau: "Experian", score: 780, status: "Online", lastUpdated: "2025-03-21T10:30:00", history: [
+    { type: "Auto Loan", status: "Active", amount: 600000 },
+    { type: "Credit Card", status: "Active", amount: 120000 },
+  ]},
 ];
 
 interface CreditBureau {
@@ -63,13 +106,10 @@ const CreditLookup: React.FC = () => {
   const [creditAssessment, setCreditAssessment] = useState<CreditAssessment | null>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  // Toast function
   const toast = ({ title, description, duration = 3000, className }: Omit<Toast, 'id'>) => {
     const id = Date.now();
     setToasts((prev) => [...prev, { id, title, description, duration, className }]);
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, duration);
+    setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), duration);
   };
 
   const handleNewApplicationSubmit = (data: { applicationName: string; borrowerName: string; description: string }) => {
@@ -79,19 +119,9 @@ const CreditLookup: React.FC = () => {
       setDescription(data.description);
       setShowNewAppModal(false);
       setShowDetailsModal(true);
-      
-      toast({
-        title: "Success",
-        description: "New application created successfully",
-        duration: 3000,
-        className: "bg-emerald-50 border-emerald-200 text-emerald-800",
-      });
+      toast({ title: "Success", description: "New application created successfully", className: "bg-emerald-50 border-emerald-200 text-emerald-800" });
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to create new application",
-        className: "bg-red-50 border-red-200 text-red-800",
-      });
+      toast({ title: "Error", description: "Failed to create new application", className: "bg-red-50 border-red-200 text-red-800" });
     }
   };
 
@@ -100,42 +130,36 @@ const CreditLookup: React.FC = () => {
     setPanCard(data.panCard);
     setShowDetailsModal(false);
     setShowFetchingModal(true);
-
-    toast({
-      title: "Processing",
-      description: "Document details submitted, fetching credit information...",
-      duration: 2000,
-      className: "bg-blue-50 border-blue-200 text-blue-800",
-    });
+    toast({ title: "Processing", description: "Fetching credit information...", duration: 2000, className: "bg-blue-50 border-blue-200 text-blue-800" });
   };
 
   const handleFetchComplete = (data: any) => {
+    const bureauScores = data.bureaus.map((b: any) => ({
+      bureau: b.name,
+      score: b.data.score,
+      status: "Online",
+      lastUpdated: new Date().toISOString(),
+      history: b.data.history,
+    }));
+
+    const unifiedScore = Math.round(
+      bureauScores.reduce((sum: number, b: CreditBureau) => sum + b.score!, 0) / bureauScores.length
+    );
+
     setCreditAssessment({
       applicationName,
       borrowerName,
       description,
       aadharCard,
       panCard,
-      unifiedScore: data.unifiedScore,
-      bureauScores: data.bureaus.map((b: any) => ({
-        bureau: b.name,
-        score: b.data?.score || null,
-        status: b.data ? "Online" : "Offline",
-        lastUpdated: new Date().toISOString(),
-        history: b.data?.history || [],
-      })),
-      confidenceScore: Math.round((data.bureaus.length / 3) * 100),
-      riskLevel: data.riskLevel,
-      recommendations: data.recommendations,
+      unifiedScore,
+      bureauScores,
+      confidenceScore: 100,
+      riskLevel: unifiedScore >= 750 ? "Low Risk" : unifiedScore >= 650 ? "Medium" : "High Risk",
+      recommendations: ["Maintain timely repayments", "Monitor credit utilization"],
     });
     setShowFetchingModal(false);
-
-    toast({
-      title: "Complete",
-      description: "Credit assessment generated successfully",
-      duration: 3000,
-      className: "bg-emerald-50 border-emerald-200 text-emerald-800",
-    });
+    toast({ title: "Complete", description: "Credit assessment generated successfully", className: "bg-emerald-50 border-emerald-200 text-emerald-800" });
   };
 
   const resetApplication = () => {
@@ -156,10 +180,6 @@ const CreditLookup: React.FC = () => {
     }
   };
 
-  const getBureauStatusColor = (status: string) => {
-    return status === "Online" ? "bg-emerald-500" : "bg-amber-500";
-  };
-
   return (
     <div className="p-6 bg-blue-50 min-h-screen relative">
       <div className="flex items-center justify-between mb-6">
@@ -176,140 +196,70 @@ const CreditLookup: React.FC = () => {
         </Button>
       </div>
 
-      {/* New Application Modal */}
       <Dialog open={showNewAppModal} onOpenChange={setShowNewAppModal}>
         <DialogContent className="sm:max-w-md bg-white border-2 border-blue-200">
           <DialogHeader className="bg-blue-100 -m-4 mb-4 p-4 rounded-t-lg">
-            <DialogTitle className="text-blue-800 flex items-center">
-              <CreditCard className="h-5 w-5 mr-2 text-blue-600" />
-              New Application
-            </DialogTitle>
-            <DialogDescription className="text-blue-600">
-              Enter the details for the new credit assessment application
-            </DialogDescription>
+            <DialogTitle className="text-blue-800 flex items-center"><CreditCard className="h-5 w-5 mr-2 text-blue-600" />New Application</DialogTitle>
+            <DialogDescription className="text-blue-600">Enter details for the new credit assessment</DialogDescription>
           </DialogHeader>
-          <form onSubmit={(e) => {
-            e.preventDefault();
-            handleNewApplicationSubmit({ applicationName, borrowerName, description });
-          }}>
+          <form onSubmit={(e) => { e.preventDefault(); handleNewApplicationSubmit({ applicationName, borrowerName, description }); }}>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label htmlFor="applicationName" className="text-blue-700">Application Name</Label>
-                <Input
-                  id="applicationName"
-                  value={applicationName}
-                  onChange={(e) => setApplicationName(e.target.value)}
-                  className="border-blue-200 focus:border-blue-400"
-                  required
-                />
+                <Input id="applicationName" value={applicationName} onChange={(e) => setApplicationName(e.target.value)} className="border-blue-200 focus:border-blue-400" required />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="borrowerName" className="text-blue-700">Borrower's Name</Label>
-                <Input
-                  id="borrowerName"
-                  value={borrowerName}
-                  onChange={(e) => setBorrowerName(e.target.value)}
-                  className="border-blue-200 focus:border-blue-400"
-                  required
-                />
+                <Input id="borrowerName" value={borrowerName} onChange={(e) => setBorrowerName(e.target.value)} className="border-blue-200 focus:border-blue-400" required />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="description" className="text-blue-700">Description</Label>
-                <Textarea
-                  id="description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="border-blue-200 focus:border-blue-400"
-                  rows={3}
-                />
+                <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} className="border-blue-200 focus:border-blue-400" rows={3} />
               </div>
             </div>
             <DialogFooter className="bg-blue-100 -m-4 mt-4 p-4 rounded-b-lg">
-              <Button variant="outline" type="button" onClick={() => setShowNewAppModal(false)}>
-                Cancel
-              </Button>
+              <Button variant="outline" type="button" onClick={() => setShowNewAppModal(false)}>Cancel</Button>
               <Button className="bg-purple-600 hover:bg-purple-700" type="submit">Next</Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
 
-      {/* Document Details Modal */}
       <Dialog open={showDetailsModal} onOpenChange={setShowDetailsModal}>
         <DialogContent className="sm:max-w-md bg-white border-2 border-blue-200">
           <DialogHeader className="bg-blue-100 -m-4 mb-4 p-4 rounded-t-lg">
-            <DialogTitle className="text-blue-800 flex items-center">
-              <Shield className="h-5 w-5 mr-2 text-blue-600" />
-              Document Details
-            </DialogTitle>
-            <DialogDescription className="text-blue-600">
-              Enter the borrower's identification details
-            </DialogDescription>
+            <DialogTitle className="text-blue-800 flex items-center"><Shield className="h-5 w-5 mr-2 text-blue-600" />Document Details</DialogTitle>
+            <DialogDescription className="text-blue-600">Enter the borrower's identification details</DialogDescription>
           </DialogHeader>
-          <form onSubmit={(e) => {
-            e.preventDefault();
-            handleDocumentSubmit({ aadharCard, panCard });
-          }}>
+          <form onSubmit={(e) => { e.preventDefault(); handleDocumentSubmit({ aadharCard, panCard }); }}>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label htmlFor="aadharCard" className="text-blue-700">Aadhar Card Number</Label>
-                <Input
-                  id="aadharCard"
-                  value={aadharCard}
-                  onChange={(e) => setAadharCard(e.target.value)}
-                  placeholder="Enter 12-digit Aadhar number"
-                  className="border-blue-200 focus:border-blue-400"
-                  required
-                  pattern="[0-9]{12}"
-                  maxLength={12}
-                />
+                <Input id="aadharCard" value={aadharCard} onChange={(e) => setAadharCard(e.target.value)} placeholder="Enter 12-digit Aadhar number" className="border-blue-200 focus:border-blue-400" required pattern="[0-9]{12}" maxLength={12} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="panCard" className="text-blue-700">PAN Card Number</Label>
-                <Input
-                  id="panCard"
-                  value={panCard}
-                  onChange={(e) => setPanCard(e.target.value)}
-                  placeholder="Enter 10-character PAN number"
-                  className="border-blue-200 focus:border-blue-400"
-                  required
-                  pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
-                  maxLength={10}
-                />
+                <Input id="panCard" value={panCard} onChange={(e) => setPanCard(e.target.value)} placeholder="Enter 10-character PAN number" className="border-blue-200 focus:border-blue-400" required pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" maxLength={10} />
               </div>
             </div>
             <DialogFooter className="bg-blue-100 -m-4 mt-4 p-4 rounded-b-lg">
-              <Button variant="outline" type="button" onClick={() => setShowDetailsModal(false)}>
-                Back
-              </Button>
+              <Button variant="outline" type="button" onClick={() => setShowDetailsModal(false)}>Back</Button>
               <Button className="bg-purple-600 hover:bg-purple-700" type="submit">Fetch Details</Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
 
-      {/* Fetching Status Modal */}
       <Dialog open={showFetchingModal} onOpenChange={setShowFetchingModal}>
         <DialogContent className="sm:max-w-md bg-white border-2 border-blue-200">
           <DialogHeader className="bg-blue-100 -m-4 mb-4 p-4 rounded-t-lg">
-            <DialogTitle className="text-blue-800 flex items-center">
-              <Shield className="h-5 w-5 mr-2 text-blue-600" />
-              Fetching Credit Information
-            </DialogTitle>
-            <DialogDescription className="text-blue-600">
-              Retrieving credit information from multiple bureaus
-            </DialogDescription>
+            <DialogTitle className="text-blue-800 flex items-center"><Shield className="h-5 w-5 mr-2 text-blue-600" />Fetching Credit Information</DialogTitle>
+            <DialogDescription className="text-blue-600">Retrieving credit information from multiple bureaus</DialogDescription>
           </DialogHeader>
-          <FetchingStatusModal 
-            open={showFetchingModal} 
-            onClose={() => setShowFetchingModal(false)}
-            onComplete={handleFetchComplete}
-            toast={toast}
-          />
+          <FetchingStatusModal open={showFetchingModal} onClose={() => setShowFetchingModal(false)} onComplete={handleFetchComplete} toast={toast} />
         </DialogContent>
       </Dialog>
 
-      {/* Credit Assessment Display */}
       {creditAssessment ? (
         <Card className="mt-8 border-2 border-blue-200 shadow-lg overflow-hidden">
           <CardHeader className="bg-blue-600 text-white">
@@ -323,9 +273,7 @@ const CreditLookup: React.FC = () => {
                 Back to Applications
               </Button>
             </div>
-            <CardDescription className="text-blue-100">
-              Comprehensive credit report across multiple bureaus
-            </CardDescription>
+            <CardDescription className="text-blue-100">Comprehensive credit report across multiple bureaus</CardDescription>
           </CardHeader>
           <CardContent className="p-6 bg-white">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -342,17 +290,16 @@ const CreditLookup: React.FC = () => {
               </div>
               <div className="bg-blue-600 text-white p-4 rounded-lg shadow-md">
                 <Label className="text-sm text-blue-100">Unified Score</Label>
-                <p className="text-4xl font-bold">{creditAssessment.unifiedScore}</p>
-                <Badge className={`${getRiskBadgeColor(creditAssessment.riskLevel)} mt-2`}>
-                  {creditAssessment.riskLevel}
-                </Badge>
+                <Gauge value={creditAssessment.unifiedScore} min={350} max={800} />
+                <Badge className={`${getRiskBadgeColor(creditAssessment.riskLevel)} mt-2`}>{creditAssessment.riskLevel}</Badge>
               </div>
             </div>
 
             <Tabs defaultValue="unified" className="space-y-6">
-              <TabsList className="grid grid-cols-3 bg-purple-100 border-2 border-purple-200">
+              <TabsList className="grid grid-cols-4 bg-purple-100 border-2 border-purple-200">
                 <TabsTrigger value="unified" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Unified Report</TabsTrigger>
-                <TabsTrigger value="cibil" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">CIBIL</TabsTrigger>
+                <TabsTrigger value="equifax" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Equifax</TabsTrigger>
+                <TabsTrigger value="transunion" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">TransUnion</TabsTrigger>
                 <TabsTrigger value="experian" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Experian</TabsTrigger>
               </TabsList>
 
@@ -361,10 +308,9 @@ const CreditLookup: React.FC = () => {
                   <h3 className="text-lg font-medium mb-4 text-purple-800">Unified Credit Assessment</h3>
                   <div className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <Card className="bg-white border-2 border-purple-100">
-                        <CardContent className="p-4">
-                          <Label className="text-sm text-purple-700">Credit Score</Label>
-                          <p className="text-2xl font-bold text-purple-800">{creditAssessment.unifiedScore}</p>
+                      <Card className="bg-white border-2 border-purple-100 flex justify-center items-center">
+                        <CardContent className="p-4 flex justify-center items-center">
+                          <Gauge value={creditAssessment.unifiedScore} min={350} max={800} label="Credit Score" />
                         </CardContent>
                       </Card>
                       <Card className="bg-white border-2 border-purple-100">
@@ -394,10 +340,12 @@ const CreditLookup: React.FC = () => {
                 </div>
               </TabsContent>
 
-              <TabsContent value="cibil">
-                <BureauReport bureauData={creditAssessment.bureauScores.find(b => b.bureau === "CIBIL")} />
+              <TabsContent value="equifax">
+                <BureauReport bureauData={creditAssessment.bureauScores.find(b => b.bureau === "Equifax")} />
               </TabsContent>
-
+              <TabsContent value="transunion">
+                <BureauReport bureauData={creditAssessment.bureauScores.find(b => b.bureau === "TransUnion")} />
+              </TabsContent>
               <TabsContent value="experian">
                 <BureauReport bureauData={creditAssessment.bureauScores.find(b => b.bureau === "Experian")} />
               </TabsContent>
@@ -417,17 +365,13 @@ const CreditLookup: React.FC = () => {
               <Shield className="h-6 w-6 mr-2 text-white" />
               <CardTitle>No Active Assessment</CardTitle>
             </div>
-            <CardDescription className="text-blue-100">
-              Start by creating a new credit assessment application
-            </CardDescription>
+            <CardDescription className="text-blue-100">Start by creating a new credit assessment application</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center py-12 bg-white">
             <div className="bg-purple-100 p-6 rounded-full mb-4 border-2 border-purple-200">
               <Plus className="h-8 w-8 text-purple-600" />
             </div>
-            <p className="text-purple-700 text-center max-w-md">
-              Create a new application to check unified credit scores across multiple bureaus and assess lending risk.
-            </p>
+            <p className="text-purple-700 text-center max-w-md">Create a new application to check unified credit scores across multiple bureaus and assess lending risk.</p>
           </CardContent>
           <CardFooter className="border-t pt-6 flex justify-center bg-gray-50 p-6">
             <Button className="bg-purple-600 hover:bg-purple-700" onClick={() => setShowNewAppModal(true)}>
@@ -438,13 +382,9 @@ const CreditLookup: React.FC = () => {
         </Card>
       )}
 
-      {/* Toast Container */}
       <div className="fixed bottom-4 right-4 space-y-2">
         {toasts.map((t) => (
-          <div
-            key={t.id}
-            className={`p-4 rounded-md shadow-lg border ${t.className || "bg-gray-800 text-white"}`}
-          >
+          <div key={t.id} className={`p-4 rounded-md shadow-lg border ${t.className || "bg-gray-800 text-white"}`}>
             <h3 className="font-bold">{t.title}</h3>
             {t.description && <p>{t.description}</p>}
           </div>
@@ -459,51 +399,38 @@ const FetchingStatusModal: React.FC<{
   open: boolean;
   onClose: () => void;
   onComplete: (data: any) => void;
-  toast: (toast: Omit<Toast, 'id'>) => void;
+  toast: (toast: omit<Toast, 'id'>) => void;
 }> = ({ open, onClose, onComplete, toast }) => {
   const [bureaus, setBureaus] = useState<{ name: string; status: string; data: { score: number; history: { type: string; status: string; amount: number }[] } | null }[]>([
-    { name: "CIBIL", status: "pending", data: null },
-    { name: "Experian", status: "pending", data: null },
     { name: "Equifax", status: "pending", data: null },
+    { name: "TransUnion", status: "pending", data: null },
+    { name: "Experian", status: "pending", data: null },
   ]);
 
   useEffect(() => {
     if (!open) return;
 
     const fetchData = async () => {
-      try {
-        for (const bureau of mockBureauData) {
-          setBureaus(prev => prev.map(b => b.name === bureau.bureau ? { ...b, status: "fetching" } : b));
-          await new Promise(resolve => setTimeout(resolve, 2000));
-          setBureaus(prev => prev.map(b => b.name === bureau.bureau ? {
-            ...b,
-            status: bureau.score ? "success" : "failed",
-            data: bureau.score ? { score: bureau.score, history: bureau.history } : null,
-          } : b));
-        }
+      // Simulate fetching with a 2-second total delay
+      setBureaus(prev => prev.map(b => ({ ...b, status: "fetching" })));
+      await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second for "fetching" state
 
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const successfulBureaus = bureaus.filter(b => b.status === "success");
-        const unifiedScore = Math.round(
-          successfulBureaus.reduce((sum, b) => sum + (b.data?.score || 0), 0) / successfulBureaus.length
-        );
-        const onCompleteData = {
-          bureaus: bureaus.filter(b => b.status === "success"),
-          unifiedScore,
-          riskLevel: unifiedScore >= 750 ? "Low Risk" : "Medium",
-          recommendations: ["Maintain timely repayments", "Monitor credit utilization"],
+      setBureaus(prev => prev.map(b => {
+        const bureauData = mockBureauData.find(md => md.bureau === b.name);
+        return {
+          ...b,
+          status: "success",
+          data: bureauData ? { score: bureauData.score, history: bureauData.history } : null,
         };
-        onComplete(onCompleteData);
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to fetch credit information",
-          className: "bg-red-50 border-red-200 text-red-800",
-        });
-      }
+      }));
+
+      await new Promise(resolve => setTimeout(resolve, 1000)); // 1 more second before completion
+      onComplete({ bureaus });
     };
 
-    fetchData();
+    fetchData().catch(() => {
+      toast({ title: "Error", description: "Failed to fetch credit information", className: "bg-red-50 border-red-200 text-red-800" });
+    });
   }, [open, onComplete, toast]);
 
   const getStatusColor = (status: string) => {
@@ -524,26 +451,16 @@ const FetchingStatusModal: React.FC<{
               <span className="font-medium text-blue-700">{bureau.name}</span>
               <div className="flex items-center">
                 <span className={`mr-2 ${getStatusColor(bureau.status)}`}>
-                  {bureau.status === "fetching" ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : bureau.status === "success" ? "✓" : bureau.status === "failed" ? "✗" : "○"}
+                  {bureau.status === "fetching" ? <Loader2 className="h-4 w-4 animate-spin" /> : bureau.status === "success" ? "✓" : "○"}
                 </span>
-                <span className={getStatusColor(bureau.status)}>
-                  {bureau.status.charAt(0).toUpperCase() + bureau.status.slice(1)}
-                </span>
+                <span className={getStatusColor(bureau.status)}>{bureau.status.charAt(0).toUpperCase() + bureau.status.slice(1)}</span>
               </div>
             </div>
           ))}
         </div>
       </div>
       <DialogFooter className="bg-blue-100 -m-4 mt-4 p-4 rounded-b-lg">
-        <Button
-          variant="outline"
-          onClick={onClose}
-          disabled={bureaus.some(b => b.status === "fetching")}
-        >
-          Cancel
-        </Button>
+        <Button variant="outline" onClick={onClose} disabled={bureaus.some(b => b.status === "fetching")}>Cancel</Button>
       </DialogFooter>
     </>
   );
@@ -553,9 +470,7 @@ const FetchingStatusModal: React.FC<{
 const BureauReport: React.FC<{ bureauData: CreditBureau | undefined }> = ({ bureauData }) => {
   return (
     <div className="bg-purple-50 p-4 rounded-lg border-2 border-purple-200">
-      <h3 className="text-lg font-medium mb-4 text-purple-800">
-        {bureauData?.bureau} Report
-      </h3>
+      <h3 className="text-lg font-medium mb-4 text-purple-800">{bureauData?.bureau} Report</h3>
       {bureauData && bureauData.score ? (
         <div className="space-y-4">
           <div>
@@ -578,9 +493,7 @@ const BureauReport: React.FC<{ bureauData: CreditBureau | undefined }> = ({ bure
                     <tr key={i}>
                       <td className="px-4 py-2 text-purple-800">{item.type}</td>
                       <td className="px-4 py-2">
-                        <Badge className={item.status === "Active" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}>
-                          {item.status}
-                        </Badge>
+                        <Badge className={item.status === "Active" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}>{item.status}</Badge>
                       </td>
                       <td className="px-4 py-2 text-purple-800">₹{item.amount.toLocaleString()}</td>
                     </tr>
