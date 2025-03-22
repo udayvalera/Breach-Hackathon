@@ -24,7 +24,7 @@ fs.readFile('credit_scores.json', 'utf8', async (err, data) => {
     }
 });
 
-async function getUnifiedCreditScore(data) {
+export async function getUnifiedCreditScore(data) {
     const prompt = `Based on the provided data ${JSON.stringify(data)}, give me a unified credit score between 300 and 850.`;
     
     try {
