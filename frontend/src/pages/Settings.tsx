@@ -5,12 +5,12 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "/home/totoro/Roger/Projects/Breach-Hackathon/frontend/src/components/ui/card";
-import { Switch } from "/home/totoro/Roger/Projects/Breach-Hackathon/frontend/src/components/ui/switch";
-import { Slider } from "/home/totoro/Roger/Projects/Breach-Hackathon/frontend/src/components/ui/slider";
-import { Button } from "/home/totoro/Roger/Projects/Breach-Hackathon/frontend/src/components/ui/button";
-import { Input } from "/home/totoro/Roger/Projects/Breach-Hackathon/frontend/src/components/ui/input";
-import { Label } from "/home/totoro/Roger/Projects/Breach-Hackathon/frontend/src/components/ui/label";
+} from "../components/ui/card";
+import { Switch } from "../components/ui/switch";
+import { Slider } from "../components/ui/slider";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -18,10 +18,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "/home/totoro/Roger/Projects/Breach-Hackathon/frontend/src/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "/home/totoro/Roger/Projects/Breach-Hackathon/frontend/src/components/ui/tabs";
+} from "../components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { Moon, Sun, Shield, Bell, Key } from "lucide-react";
-import { Separator } from "/home/totoro/Roger/Projects/Breach-Hackathon/frontend/src/components/ui/separator";
+import { Separator } from "../components/ui/separator";
+
 
 const Settings: React.FC = () => {
   // State for settings

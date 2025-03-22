@@ -1,11 +1,14 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { MoonIcon, SunIcon } from 'lucide-react';
+import { supabase } from './lib/supabase';
+import type  User  from '@supabase/supabase-js';
 import Header from './components/Layout/Header';
 import Sidebar from './components/Layout/Sidebar';
 import Footer from './components/Layout/Footer';
 import AppRoutes from './routes';
+import { Auth } from './components/Auth';
 
+// Theme Context Setup
 type Theme = 'dark' | 'light';
 
 interface ThemeContextType {
@@ -27,22 +30,18 @@ export const useTheme = () => {
 };
 
 function App() {
+  // Theme state management
   const [theme, setTheme] = useState<Theme>(() => {
-    // Check local storage first
     const saved = localStorage.getItem('theme') as Theme;
     if (saved) return saved;
-    
-    // Then check system preference
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   });
 
   useEffect(() => {
-    // Update document root class and local storage
     document.documentElement.classList.remove('light', 'dark');
     document.documentElement.classList.add(theme);
     localStorage.setItem('theme', theme);
 
-    // Listen for system theme changes
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e: MediaQueryListEvent) => {
       setTheme(e.matches ? 'dark' : 'light');
@@ -56,20 +55,54 @@ function App() {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
+  // Authentication state management
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }: { data: { session: { user: User | null } | null } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    interface AuthStateChangePayload {
+      event: string;
+      session: {
+        user: User | null;
+      } | null;
+    }
+
+    interface AuthSubscription {
+      unsubscribe: () => void;
+    }
+
+    const { data: { subscription } }: { data: { subscription: AuthSubscription } } = supabase.auth.onAuthStateChange(
+      (_event: AuthStateChangePayload['event'], session: AuthStateChangePayload['session']) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
+
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
       <Router>
         <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-150">
-          
-          <div className="flex flex-1 overflow-hidden">
-            <Sidebar />
-            
-            <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-background">
-              <AppRoutes />
-            </main>
-          </div>
-          
-          <Footer />
+          {user ? (
+            <>
+              <Header />
+              <div className="flex flex-1 overflow-hidden">
+                <Sidebar />
+                <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-background">
+                  <AppRoutes />
+                </main>
+              </div>
+              <Footer />
+            </>
+          ) : (
+            <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+              <Auth />
+            </div>
+          )}
         </div>
       </Router>
     </ThemeContext.Provider>
