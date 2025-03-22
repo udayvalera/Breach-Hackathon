@@ -1,0 +1,1001 @@
+[
+    {
+        "transunion_cibil": {
+            "credit_score": {
+                "score": 720,
+                "range": "300-900",
+                "rating": "Good",
+                "report_date": "18-03-2025"
+            },
+            "accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "HDFC Bank",
+                    "status": "Active",
+                    "balance": 25000,
+                    "limit": 200000,
+                    "payment_history": "All payments on time"
+                },
+                {
+                    "type": "Home Loan",
+                    "institution": "SBI",
+                    "status": "Active",
+                    "balance": 4000000,
+                    "limit": 5000000,
+                    "payment_history": "All payments on time"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "HDFC Bank",
+                    "purpose": "Credit Card",
+                    "date": "15-04-2024"
+                }
+            ]
+        },
+        "experian": {
+            "credit_score": {
+                "score": 710,
+                "range": "300-900",
+                "rating": "Good",
+                "report_date": "18-03-2025"
+            },
+            "account_summary": {
+                "active_accounts": 2,
+                "closed_accounts": 1,
+                "total_balance": 4025000
+            },
+            "accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "HDFC Bank",
+                    "status": "Active",
+                    "balance": 25000,
+                    "opened": "May 2018",
+                    "payment_status": "Current"
+                },
+                {
+                    "type": "Home Loan",
+                    "institution": "SBI",
+                    "status": "Active",
+                    "balance": 4000000,
+                    "opened": "Dec 2020",
+                    "payment_status": "Current"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "SBI",
+                    "purpose": "Home Loan",
+                    "date": "15-04-2024"
+                }
+            ],
+            "credit_utilization": "12%"
+        },
+        "equifax": {
+            "credit_score": {
+                "score": 730,
+                "range": "300-900",
+                "rating": "Good",
+                "report_date": "18-03-2025"
+            },
+            "credit_overview": {
+                "open_accounts": 2,
+                "delinquent_accounts": 0,
+                "outstanding_balance": 4025000
+            },
+            "active_accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "HDFC Bank",
+                    "balance": 25000,
+                    "limit": 200000,
+                    "status": "Active"
+                },
+                {
+                    "type": "Home Loan",
+                    "institution": "SBI",
+                    "balance": 4000000,
+                    "limit": 5000000,
+                    "status": "Active"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "HDFC Bank",
+                    "purpose": "Credit Card",
+                    "date": "15-04-2024"
+                }
+            ],
+            "risk_analysis": "User has a good credit history with consistent on-time payments across all accounts. No delinquencies observed."
+        }
+    },
+    {
+        "transunion_cibil": {
+            "credit_score": {
+                "score": 680,
+                "range": "300-900",
+                "rating": "Fair",
+                "report_date": "18-03-2025"
+            },
+            "accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "ICICI Bank",
+                    "status": "Active",
+                    "balance": 15000,
+                    "limit": 100000,
+                    "payment_history": "All payments on time"
+                },
+                {
+                    "type": "Personal Loan",
+                    "institution": "Axis Bank",
+                    "status": "Active",
+                    "balance": 300000,
+                    "limit": 500000,
+                    "payment_history": "All payments on time"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "ICICI Bank",
+                    "purpose": "Credit Card",
+                    "date": "15-04-2024"
+                }
+            ]
+        },
+        "experian": {
+            "credit_score": {
+                "score": 670,
+                "range": "300-900",
+                "rating": "Fair",
+                "report_date": "18-03-2025"
+            },
+            "account_summary": {
+                "active_accounts": 2,
+                "closed_accounts": 0,
+                "total_balance": 315000
+            },
+            "accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "ICICI Bank",
+                    "status": "Active",
+                    "balance": 15000,
+                    "opened": "May 2018",
+                    "payment_status": "Current"
+                },
+                {
+                    "type": "Personal Loan",
+                    "institution": "Axis Bank",
+                    "status": "Active",
+                    "balance": 300000,
+                    "opened": "Dec 2020",
+                    "payment_status": "Current"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "Axis Bank",
+                    "purpose": "Personal Loan",
+                    "date": "15-04-2024"
+                }
+            ],
+            "credit_utilization": "15%"
+        },
+        "equifax": {
+            "credit_score": {
+                "score": 690,
+                "range": "300-900",
+                "rating": "Fair",
+                "report_date": "18-03-2025"
+            },
+            "credit_overview": {
+                "open_accounts": 2,
+                "delinquent_accounts": 0,
+                "outstanding_balance": 315000
+            },
+            "active_accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "ICICI Bank",
+                    "balance": 15000,
+                    "limit": 100000,
+                    "status": "Active"
+                },
+                {
+                    "type": "Personal Loan",
+                    "institution": "Axis Bank",
+                    "balance": 300000,
+                    "limit": 500000,
+                    "status": "Active"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "ICICI Bank",
+                    "purpose": "Credit Card",
+                    "date": "15-04-2024"
+                }
+            ],
+            "risk_analysis": "User has a fair credit history with no delinquencies. Credit utilization is within acceptable limits."
+        }
+    },
+    {
+        "transunion_cibil": {
+            "credit_score": {
+                "score": 750,
+                "range": "300-900",
+                "rating": "Good",
+                "report_date": "18-03-2025"
+            },
+            "accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "Kotak Mahindra",
+                    "status": "Active",
+                    "balance": 20000,
+                    "limit": 150000,
+                    "payment_history": "All payments on time"
+                },
+                {
+                    "type": "Home Loan",
+                    "institution": "IndusInd Bank",
+                    "status": "Active",
+                    "balance": 3500000,
+                    "limit": 4000000,
+                    "payment_history": "All payments on time"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "Kotak Mahindra",
+                    "purpose": "Credit Card",
+                    "date": "15-04-2024"
+                }
+            ]
+        },
+        "experian": {
+            "credit_score": {
+                "score": 740,
+                "range": "300-900",
+                "rating": "Good",
+                "report_date": "18-03-2025"
+            },
+            "account_summary": {
+                "active_accounts": 2,
+                "closed_accounts": 0,
+                "total_balance": 3520000
+            },
+            "accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "Kotak Mahindra",
+                    "status": "Active",
+                    "balance": 20000,
+                    "opened": "May 2018",
+                    "payment_status": "Current"
+                },
+                {
+                    "type": "Home Loan",
+                    "institution": "IndusInd Bank",
+                    "status": "Active",
+                    "balance": 3500000,
+                    "opened": "Dec 2020",
+                    "payment_status": "Current"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "IndusInd Bank",
+                    "purpose": "Home Loan",
+                    "date": "15-04-2024"
+                }
+            ],
+            "credit_utilization": "13%"
+        },
+        "equifax": {
+            "credit_score": {
+                "score": 760,
+                "range": "300-900",
+                "rating": "Good",
+                "report_date": "18-03-2025"
+            },
+            "credit_overview": {
+                "open_accounts": 2,
+                "delinquent_accounts": 0,
+                "outstanding_balance": 3520000
+            },
+            "active_accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "Kotak Mahindra",
+                    "balance": 20000,
+                    "limit": 150000,
+                    "status": "Active"
+                },
+                {
+                    "type": "Home Loan",
+                    "institution": "IndusInd Bank",
+                    "balance": 3500000,
+                    "limit": 4000000,
+                    "status": "Active"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "Kotak Mahindra",
+                    "purpose": "Credit Card",
+                    "date": "15-04-2024"
+                }
+            ],
+            "risk_analysis": "User has a strong credit history with low credit utilization and no delinquencies."
+        }
+    },
+    {
+        "transunion_cibil": {
+            "credit_score": {
+                "score": 690,
+                "range": "300-900",
+                "rating": "Fair",
+                "report_date": "18-03-2025"
+            },
+            "accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "Yes Bank",
+                    "status": "Active",
+                    "balance": 18000,
+                    "limit": 100000,
+                    "payment_history": "All payments on time"
+                },
+                {
+                    "type": "Personal Loan",
+                    "institution": "Punjab National Bank",
+                    "status": "Active",
+                    "balance": 250000,
+                    "limit": 500000,
+                    "payment_history": "All payments on time"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "Yes Bank",
+                    "purpose": "Credit Card",
+                    "date": "15-04-2024"
+                }
+            ]
+        },
+        "experian": {
+            "credit_score": {
+                "score": 680,
+                "range": "300-900",
+                "rating": "Fair",
+                "report_date": "18-03-2025"
+            },
+            "account_summary": {
+                "active_accounts": 2,
+                "closed_accounts": 0,
+                "total_balance": 268000
+            },
+            "accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "Yes Bank",
+                    "status": "Active",
+                    "balance": 18000,
+                    "opened": "May 2018",
+                    "payment_status": "Current"
+                },
+                {
+                    "type": "Personal Loan",
+                    "institution": "Punjab National Bank",
+                    "status": "Active",
+                    "balance": 250000,
+                    "opened": "Dec 2020",
+                    "payment_status": "Current"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "Punjab National Bank",
+                    "purpose": "Personal Loan",
+                    "date": "15-04-2024"
+                }
+            ],
+            "credit_utilization": "18%"
+        },
+        "equifax": {
+            "credit_score": {
+                "score": 700,
+                "range": "300-900",
+                "rating": "Fair",
+                "report_date": "18-03-2025"
+            },
+            "credit_overview": {
+                "open_accounts": 2,
+                "delinquent_accounts": 0,
+                "outstanding_balance": 268000
+            },
+            "active_accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "Yes Bank",
+                    "balance": 18000,
+                    "limit": 100000,
+                    "status": "Active"
+                },
+                {
+                    "type": "Personal Loan",
+                    "institution": "Punjab National Bank",
+                    "balance": 250000,
+                    "limit": 500000,
+                    "status": "Active"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "Yes Bank",
+                    "purpose": "Credit Card",
+                    "date": "15-04-2024"
+                }
+            ],
+            "risk_analysis": "User has a fair credit history with no delinquencies. Credit utilization is slightly high but manageable."
+        }
+    },
+    {
+        "transunion_cibil": {
+            "credit_score": {
+                "score": 710,
+                "range": "300-900",
+                "rating": "Good",
+                "report_date": "18-03-2025"
+            },
+            "accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "IDFC Bank",
+                    "status": "Active",
+                    "balance": 22000,
+                    "limit": 150000,
+                    "payment_history": "All payments on time"
+                },
+                {
+                    "type": "Home Loan",
+                    "institution": "Bank of Baroda",
+                    "status": "Active",
+                    "balance": 3800000,
+                    "limit": 5000000,
+                    "payment_history": "All payments on time"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "IDFC Bank",
+                    "purpose": "Credit Card",
+                    "date": "15-04-2024"
+                }
+            ]
+        },
+        "experian": {
+            "credit_score": {
+                "score": 700,
+                "range": "300-900",
+                "rating": "Good",
+                "report_date": "18-03-2025"
+            },
+            "account_summary": {
+                "active_accounts": 2,
+                "closed_accounts": 0,
+                "total_balance": 3822000
+            },
+            "accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "IDFC Bank",
+                    "status": "Active",
+                    "balance": 22000,
+                    "opened": "May 2018",
+                    "payment_status": "Current"
+                },
+                {
+                    "type": "Home Loan",
+                    "institution": "Bank of Baroda",
+                    "status": "Active",
+                    "balance": 3800000,
+                    "opened": "Dec 2020",
+                    "payment_status": "Current"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "Bank of Baroda",
+                    "purpose": "Home Loan",
+                    "date": "15-04-2024"
+                }
+            ],
+            "credit_utilization": "14%"
+        },
+        "equifax": {
+            "credit_score": {
+                "score": 720,
+                "range": "300-900",
+                "rating": "Good",
+                "report_date": "18-03-2025"
+            },
+            "credit_overview": {
+                "open_accounts": 2,
+                "delinquent_accounts": 0,
+                "outstanding_balance": 3822000
+            },
+            "active_accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "IDFC Bank",
+                    "balance": 22000,
+                    "limit": 150000,
+                    "status": "Active"
+                },
+                {
+                    "type": "Home Loan",
+                    "institution": "Bank of Baroda",
+                    "balance": 3800000,
+                    "limit": 5000000,
+                    "status": "Active"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "IDFC Bank",
+                    "purpose": "Credit Card",
+                    "date": "15-04-2024"
+                }
+            ],
+            "risk_analysis": "User has a good credit history with low credit utilization and no delinquencies."
+        }
+    },
+    {
+        "transunion_cibil": {
+            "credit_score": {
+                "score": 670,
+                "range": "300-900",
+                "rating": "Fair",
+                "report_date": "18-03-2025"
+            },
+            "accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "IndusInd Bank",
+                    "status": "Active",
+                    "balance": 15000,
+                    "limit": 100000,
+                    "payment_history": "All payments on time"
+                },
+                {
+                    "type": "Personal Loan",
+                    "institution": "Yes Bank",
+                    "status": "Active",
+                    "balance": 200000,
+                    "limit": 400000,
+                    "payment_history": "All payments on time"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "IndusInd Bank",
+                    "purpose": "Credit Card",
+                    "date": "15-04-2024"
+                }
+            ]
+        },
+        "experian": {
+            "credit_score": {
+                "score": 660,
+                "range": "300-900",
+                "rating": "Fair",
+                "report_date": "18-03-2025"
+            },
+            "account_summary": {
+                "active_accounts": 2,
+                "closed_accounts": 0,
+                "total_balance": 215000
+            },
+            "accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "IndusInd Bank",
+                    "status": "Active",
+                    "balance": 15000,
+                    "opened": "May 2018",
+                    "payment_status": "Current"
+                },
+                {
+                    "type": "Personal Loan",
+                    "institution": "Yes Bank",
+                    "status": "Active",
+                    "balance": 200000,
+                    "opened": "Dec 2020",
+                    "payment_status": "Current"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "Yes Bank",
+                    "purpose": "Personal Loan",
+                    "date": "15-04-2024"
+                }
+            ],
+            "credit_utilization": "15%"
+        },
+        "equifax": {
+            "credit_score": {
+                "score": 680,
+                "range": "300-900",
+                "rating": "Fair",
+                "report_date": "18-03-2025"
+            },
+            "credit_overview": {
+                "open_accounts": 2,
+                "delinquent_accounts": 0,
+                "outstanding_balance": 215000
+            },
+            "active_accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "IndusInd Bank",
+                    "balance": 15000,
+                    "limit": 100000,
+                    "status": "Active"
+                },
+                {
+                    "type": "Personal Loan",
+                    "institution": "Yes Bank",
+                    "balance": 200000,
+                    "limit": 400000,
+                    "status": "Active"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "IndusInd Bank",
+                    "purpose": "Credit Card",
+                    "date": "15-04-2024"
+                }
+            ],
+            "risk_analysis": "User has a fair credit history with no delinquencies. Credit utilization is within acceptable limits."
+        }
+    },
+    {
+        "transunion_cibil": {
+            "credit_score": {
+                "score": 740,
+                "range": "300-900",
+                "rating": "Good",
+                "report_date": "18-03-2025"
+            },
+            "accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "Axis Bank",
+                    "status": "Active",
+                    "balance": 30000,
+                    "limit": 200000,
+                    "payment_history": "All payments on time"
+                },
+                {
+                    "type": "Home Loan",
+                    "institution": "HDFC Bank",
+                    "status": "Active",
+                    "balance": 4200000,
+                    "limit": 5000000,
+                    "payment_history": "All payments on time"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "Axis Bank",
+                    "purpose": "Credit Card",
+                    "date": "15-04-2024"
+                }
+            ]
+        },
+        "experian": {
+            "credit_score": {
+                "score": 730,
+                "range": "300-900",
+                "rating": "Good",
+                "report_date": "18-03-2025"
+            },
+            "account_summary": {
+                "active_accounts": 2,
+                "closed_accounts": 0,
+                "total_balance": 4230000
+            },
+            "accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "Axis Bank",
+                    "status": "Active",
+                    "balance": 30000,
+                    "opened": "May 2018",
+                    "payment_status": "Current"
+                },
+                {
+                    "type": "Home Loan",
+                    "institution": "HDFC Bank",
+                    "status": "Active",
+                    "balance": 4200000,
+                    "opened": "Dec 2020",
+                    "payment_status": "Current"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "HDFC Bank",
+                    "purpose": "Home Loan",
+                    "date": "15-04-2024"
+                }
+            ],
+            "credit_utilization": "15%"
+        },
+        "equifax": {
+            "credit_score": {
+                "score": 750,
+                "range": "300-900",
+                "rating": "Good",
+                "report_date": "18-03-2025"
+            },
+            "credit_overview": {
+                "open_accounts": 2,
+                "delinquent_accounts": 0,
+                "outstanding_balance": 4230000
+            },
+            "active_accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "Axis Bank",
+                    "balance": 30000,
+                    "limit": 200000,
+                    "status": "Active"
+                },
+                {
+                    "type": "Home Loan",
+                    "institution": "HDFC Bank",
+                    "balance": 4200000,
+                    "limit": 5000000,
+                    "status": "Active"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "Axis Bank",
+                    "purpose": "Credit Card",
+                    "date": "15-04-2024"
+                }
+            ],
+            "risk_analysis": "User has a strong credit history with low credit utilization and no delinquencies."
+        }
+    },
+    {
+        "transunion_cibil": {
+            "credit_score": {
+                "score": 690,
+                "range": "300-900",
+                "rating": "Fair",
+                "report_date": "18-03-2025"
+            },
+            "accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "ICICI Bank",
+                    "status": "Active",
+                    "balance": 25000,
+                    "limit": 150000,
+                    "payment_history": "All payments on time"
+                },
+                {
+                    "type": "Personal Loan",
+                    "institution": "SBI",
+                    "status": "Active",
+                    "balance": 300000,
+                    "limit": 500000,
+                    "payment_history": "All payments on time"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "ICICI Bank",
+                    "purpose": "Credit Card",
+                    "date": "15-04-2024"
+                }
+            ]
+        },
+        "experian": {
+            "credit_score": {
+                "score": 680,
+                "range": "300-900",
+                "rating": "Fair",
+                "report_date": "18-03-2025"
+            },
+            "account_summary": {
+                "active_accounts": 2,
+                "closed_accounts": 0,
+                "total_balance": 325000
+            },
+            "accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "ICICI Bank",
+                    "status": "Active",
+                    "balance": 25000,
+                    "opened": "May 2018",
+                    "payment_status": "Current"
+                },
+                {
+                    "type": "Personal Loan",
+                    "institution": "SBI",
+                    "status": "Active",
+                    "balance": 300000,
+                    "opened": "Dec 2020",
+                    "payment_status": "Current"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "SBI",
+                    "purpose": "Personal Loan",
+                    "date": "15-04-2024"
+                }
+            ],
+            "credit_utilization": "16%"
+        },
+        "equifax": {
+            "credit_score": {
+                "score": 700,
+                "range": "300-900",
+                "rating": "Fair",
+                "report_date": "18-03-2025"
+            },
+            "credit_overview": {
+                "open_accounts": 2,
+                "delinquent_accounts": 0,
+                "outstanding_balance": 325000
+            },
+            "active_accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "ICICI Bank",
+                    "balance": 25000,
+                    "limit": 150000,
+                    "status": "Active"
+                },
+                {
+                    "type": "Personal Loan",
+                    "institution": "SBI",
+                    "balance": 300000,
+                    "limit": 500000,
+                    "status": "Active"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "ICICI Bank",
+                    "purpose": "Credit Card",
+                    "date": "15-04-2024"
+                }
+            ],
+            "risk_analysis": "User has a fair credit history with no delinquencies. Credit utilization is slightly high but manageable."
+        }
+    },
+    {
+        "transunion_cibil": {
+            "credit_score": {
+                "score": 710,
+                "range": "300-900",
+                "rating": "Good",
+                "report_date": "18-03-2025"
+            },
+            "accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "IDFC Bank",
+                    "status": "Active",
+                    "balance": 22000,
+                    "limit": 150000,
+                    "payment_history": "All payments on time"
+                },
+                {
+                    "type": "Home Loan",
+                    "institution": "Bank of Baroda",
+                    "status": "Active",
+                    "balance": 3800000,
+                    "limit": 5000000,
+                    "payment_history": "All payments on time"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "IDFC Bank",
+                    "purpose": "Credit Card",
+                    "date": "15-04-2024"
+                }
+            ]
+        },
+        "experian": {
+            "credit_score": {
+                "score": 700,
+                "range": "300-900",
+                "rating": "Good",
+                "report_date": "18-03-2025"
+            },
+            "account_summary": {
+                "active_accounts": 2,
+                "closed_accounts": 0,
+                "total_balance": 3822000
+            },
+            "accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "IDFC Bank",
+                    "status": "Active",
+                    "balance": 22000,
+                    "opened": "May 2018",
+                    "payment_status": "Current"
+                },
+                {
+                    "type": "Home Loan",
+                    "institution": "Bank of Baroda",
+                    "status": "Active",
+                    "balance": 3800000,
+                    "opened": "Dec 2020",
+                    "payment_status": "Current"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "Bank of Baroda",
+                    "purpose": "Home Loan",
+                    "date": "15-04-2024"
+                }
+            ],
+            "credit_utilization": "14%"
+        },
+        "equifax": {
+            "credit_score": {
+                "score": 720,
+                "range": "300-900",
+                "rating": "Good",
+                "report_date": "18-03-2025"
+            },
+            "credit_overview": {
+                "open_accounts": 2,
+                "delinquent_accounts": 0,
+                "outstanding_balance": 3822000
+            },
+            "active_accounts": [
+                {
+                    "type": "Credit Card",
+                    "institution": "IDFC Bank",
+                    "balance": 22000,
+                    "limit": 150000,
+                    "status": "Active"
+                },
+                {
+                    "type": "Home Loan",
+                    "institution": "Bank of Baroda",
+                    "balance": 3800000,
+                    "limit": 5000000,
+                    "status": "Active"
+                }
+            ],
+            "inquiries": [
+                {
+                    "institution": "IDFC Bank",
+                    "purpose": "Credit Card",
+                    "date": "15-04-2024"
+                }
+            ],
+            "risk_analysis": "User has a good credit history with low credit utilization and no delinquencies."
+        }
+    }
+]
