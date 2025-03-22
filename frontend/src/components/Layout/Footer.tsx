@@ -1,8 +1,8 @@
 import React from "react";
 import { AlertCircle } from "lucide-react";
 import { bureauStatus } from "../../data/mockData";
-import { Alert, AlertDescription } from "../ui/alert"; // shadcn/ui Alert
-import { Button } from "../ui/button"; // shadcn/ui Button
+import { Alert, AlertDescription } from "../../components/ui/alert"; // shadcn/ui Alert
+import { Button } from "../../components/ui/button"; // shadcn/ui Button
 
 export default function Footer() {
   const allOnline = bureauStatus.every((bureau) => bureau.status === "Online");

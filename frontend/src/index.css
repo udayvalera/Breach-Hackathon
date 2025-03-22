@@ -30,29 +30,6 @@
     --chart-4: 47.9 95.8% 53.1%;
     --chart-5: 172.5 66.7% 50.4%;
   }
- 
-.dark {
-  --background: 220 70% 7%;        /* Slightly lighter, more blue */
-  --foreground: 213 31% 91%;
-  --card: 222 68% 8%;              /* Slightly different blue shade for cards */
-  --card-foreground: 213 31% 91%;
-  --popover: 220 70% 7%;
-  --popover-foreground: 215 20.2% 65.1%;
-  --primary: 210 40% 98%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  --secondary: 217 54% 15%;        /* More saturated blue for secondary */
-  --secondary-foreground: 210 40% 98%;
-  --muted: 215 50% 13%;            /* Bluer muted background */
-  --muted-foreground: 215.4 16.3% 56.9%;
-  --accent: 217 45% 19%;           /* Bluer accent */
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 63% 31%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217 40% 20%;           /* Bluer border */
-  --input: 217 40% 20%;
-  --ring: 224 76% 15%;             /* More pronounced blue ring */
-  /* Chart colors remain the same */
-}
 }
 
 @layer base {
@@ -121,5 +98,23 @@
   
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+  
+  /* Shadow with hover depth effect */
+  .shadow-depth {
+    @apply shadow-md transition-shadow duration-200;
+  }
+  
+  .shadow-depth:hover {
+    @apply shadow-lg;
+  }
+  
+  /* For elements that need a more dramatic effect */
+  .shadow-depth-lg {
+    @apply shadow-lg transition-shadow duration-200;
+  }
+  
+  .shadow-depth-lg:hover {
+    @apply shadow-xl;
   }
 }

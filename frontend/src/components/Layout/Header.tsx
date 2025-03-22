@@ -1,32 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Bell, CreditCard, X, Sun, Moon } from 'lucide-react';
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuGroup, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
-} from "@/components/ui/dropdown-menu";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardFooter, 
-  CardHeader, 
-  CardTitle 
-} from "@/components/ui/card";
+import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
+// Removed unused imports for dropdown menu components
+// Removed unused imports for card components
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Badge } from "@/components/ui/badge";
+} from "../../components/ui/tooltip";
+import { Badge } from "../../components/ui/badge";
 
 interface Notification {
   id: string;
@@ -127,9 +112,6 @@ export default function Header() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={toggleDarkMode}>
-                  {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-                </Button>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Toggle theme</p>
@@ -137,50 +119,6 @@ export default function Header() {
             </Tooltip>
           </TooltipProvider>
 
-          <DropdownMenu open={showNotifications} onOpenChange={setShowNotifications}>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative">
-                <Bell className="h-5 w-5" />
-                {unreadCount > 0 && (
-                  <span className="absolute top-0 right-0 h-4 w-4 bg-destructive text-destructive-foreground text-xs rounded-full flex items-center justify-center text-[10px]">
-                    {unreadCount}
-                  </span>
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[350px]">
-              <DropdownMenuLabel className="font-normal">
-                <div className="flex justify-between items-center">
-                  <h2 className="text-sm font-semibold">Notifications</h2>
-                  <Button variant="ghost" size="sm" className="h-8 px-2">
-                    <span className="text-xs">Mark all as read</span>
-                  </Button>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <div className="max-h-80 overflow-y-auto">
-                {notifications.map((notification) => (
-                  <DropdownMenuItem key={notification.id} className="cursor-pointer p-0">
-                    <div 
-                      className={`w-full p-3 ${!notification.read ? 'bg-muted/50' : ''}`}
-                      onClick={() => markAsRead(notification.id)}
-                    >
-                      <div className="flex justify-between items-start mb-1">
-                        <div className="flex items-center gap-2">
-                          <h3 className="text-sm font-medium">{notification.title}</h3>
-                          {getNotificationBadge(notification.type)}
-                        </div>
-                        <span className="text-xs text-muted-foreground">
-                          {new Date(notification.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        </span>
-                      </div>
-                      <p className="text-xs text-muted-foreground">{notification.message}</p>
-                    </div>
-                  </DropdownMenuItem>
-                ))}
-              </div>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
     </header>

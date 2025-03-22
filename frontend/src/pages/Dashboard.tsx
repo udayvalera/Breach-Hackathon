@@ -5,7 +5,9 @@ import {
   Activity,
   AlertCircle,
   Download,
-  RefreshCw
+  RefreshCw,
+  Shield,
+  Lock
 } from "lucide-react";
 import { mockBorrowers, bureauStatus } from "../data/mockData";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -63,46 +65,49 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="p-6 space-y-6 bg-slate-50 min-h-screen">
+    <div className="p-6 space-y-6 bg-blue-50 min-h-screen">
       <div className="flex flex-col md:flex-row justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
-          <p className="text-slate-500 mt-1">Overview of credit lookup activity</p>
+          <div className="flex items-center">
+            <Shield className="h-8 w-8 text-blue-600 mr-3" />
+            <h1 className="text-3xl font-bold text-blue-800">Secure Dashboard</h1>
+          </div>
+          <p className="text-blue-600 mt-1 ml-11">Protected credit lookup activity overview</p>
         </div>
-        <Button variant="outline" className="w-fit">
+        <Button className="w-fit bg-blue-600 hover:bg-blue-700 text-white">
           <RefreshCw className="h-4 w-4 mr-2" />
           Refresh Data
         </Button>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
+        <Card className="border-2 border-purple-200 bg-purple-50 shadow-md">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">Total Lookups Today</CardTitle>
+            <CardTitle className="text-sm font-medium text-purple-600">Total Lookups Today</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
-              <Users className="h-8 w-8 text-blue-500 mr-3" />
-              <div className="text-2xl font-bold">{totalLookups} <span className="text-slate-500 text-lg font-normal">Borrowers</span></div>
+              <Users className="h-10 w-10 text-purple-500 mr-3 p-1 bg-purple-100 rounded-full" />
+              <div className="text-2xl font-bold text-purple-700">{totalLookups} <span className="text-purple-500 text-lg font-normal">Borrowers</span></div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-2 border-green-200 bg-green-50 shadow-md">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">Average Unified Score</CardTitle>
+            <CardTitle className="text-sm font-medium text-green-600">Average Unified Score</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
-              <TrendingUp className="h-8 w-8 text-green-500 mr-3" />
-              <div className="text-2xl font-bold">{averageScore}</div>
+              <TrendingUp className="h-10 w-10 text-green-500 mr-3 p-1 bg-green-100 rounded-full" />
+              <div className="text-2xl font-bold text-green-700">{averageScore}</div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-2 border-cyan-200 bg-cyan-50 shadow-md">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">Bureau Uptime</CardTitle>
+            <CardTitle className="text-sm font-medium text-cyan-600">Bureau Uptime</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -110,14 +115,14 @@ export default function Dashboard() {
                 <div key={bureau.name}>
                   <div className="flex justify-between items-center mb-1">
                     <div className="flex items-center">
-                      <span className={`w-2 h-2 rounded-full mr-2 ${
-                        bureau.status === "Online" ? "bg-green-500" : "bg-red-500"
+                      <span className={`w-3 h-3 rounded-full mr-2 ${
+                        bureau.status === "Online" ? "bg-cyan-500" : "bg-red-500"
                       }`}></span>
-                      <span className="text-sm font-medium">{bureau.name}</span>
+                      <span className="text-sm font-medium text-cyan-700">{bureau.name}</span>
                     </div>
-                    <span className="text-sm text-slate-500">{bureau.uptime}%</span>
+                    <span className="text-sm text-cyan-600">{bureau.uptime}%</span>
                   </div>
-                  <Progress value={bureau.uptime} className="h-1" />
+                  <Progress value={bureau.uptime} className="h-2 bg-cyan-100" indicatorClassName="bg-cyan-500" />
                 </div>
               ))}
             </div>
@@ -125,47 +130,50 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Activity</CardTitle>
-          <CardDescription>Latest credit assessment results</CardDescription>
+      <Card className="border-2 border-blue-200 bg-white shadow-lg">
+        <CardHeader className="bg-blue-600 text-white rounded-t-lg">
+          <div className="flex items-center">
+            <Lock className="h-5 w-5 mr-2" />
+            <CardTitle>Secured Recent Activity</CardTitle>
+          </div>
+          <CardDescription className="text-blue-100">Latest encrypted credit assessment results</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <Table>
-            <TableHeader>
+            <TableHeader className="bg-blue-50">
               <TableRow>
-                <TableHead>Borrower</TableHead>
-                <TableHead>Score</TableHead>
-                <TableHead>Risk Level</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Time</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead className="text-blue-700">Borrower</TableHead>
+                <TableHead className="text-blue-700">Score</TableHead>
+                <TableHead className="text-blue-700">Risk Level</TableHead>
+                <TableHead className="text-blue-700">Status</TableHead>
+                <TableHead className="text-blue-700">Time</TableHead>
+                <TableHead className="text-blue-700">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockBorrowers.map(borrower => (
-                <TableRow key={borrower.id}>
-                  <TableCell className="font-medium">{borrower.name}</TableCell>
-                  <TableCell>{borrower.unifiedScore}</TableCell>
+              {mockBorrowers.map((borrower, index) => (
+                <TableRow key={borrower.id} className={index % 2 === 0 ? "bg-white" : "bg-blue-50"}>
+                  <TableCell className="font-medium text-blue-800">{borrower.name}</TableCell>
+                  <TableCell className="font-medium">{borrower.unifiedScore}</TableCell>
                   <TableCell>
-                    <Badge variant={getRiskBadgeVariant(borrower.riskLevel)}>
+                    <Badge variant={getRiskBadgeVariant(borrower.riskLevel)} className="px-3 py-1">
                       {borrower.riskLevel} Risk
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={getStatusBadgeVariant(borrower.status)}>
+                    <Badge variant={getStatusBadgeVariant(borrower.status)} className="px-3 py-1">
                       {borrower.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-slate-500">
+                  <TableCell className="text-slate-600">
                     {new Date(borrower.lastUpdated).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                   </TableCell>
                   <TableCell>
                     <Button 
-                      variant="ghost" 
+                      variant="outline" 
                       size="sm" 
                       onClick={() => downloadReport(borrower)}
-                      className="h-8 px-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                      className="h-8 px-3 text-blue-600 hover:text-blue-800 hover:bg-blue-50 border-blue-300 flex items-center"
                     >
                       <Download className="h-4 w-4 mr-1" />
                       Report
@@ -176,22 +184,22 @@ export default function Dashboard() {
             </TableBody>
           </Table>
         </CardContent>
-        <CardFooter className="border-t flex justify-between items-center pt-6">
-          <p className="text-sm text-slate-500">Showing {mockBorrowers.length} records</p>
-          <Button variant="outline" size="sm">View All Activity</Button>
+        <CardFooter className="border-t border-blue-100 flex justify-between items-center pt-6 bg-blue-50 rounded-b-lg">
+          <p className="text-sm text-blue-600">Showing {mockBorrowers.length} secured records</p>
+          <Button className="bg-blue-600 hover:bg-blue-700 text-white" size="sm">View All Activity</Button>
         </CardFooter>
       </Card>
 
       {bureauStatus.some(bureau => bureau.status === "Offline") && (
-        <Alert variant="warning">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Bureau Downtime Alert</AlertTitle>
+        <Alert className="bg-amber-50 border-2 border-amber-300 text-amber-800">
+          <AlertCircle className="h-5 w-5 text-amber-600" />
+          <AlertTitle className="text-amber-800 font-bold">Bureau Downtime Alert</AlertTitle>
           <AlertDescription className="flex justify-between items-center">
             <span>
               {bureauStatus.find(b => b.status === "Offline")?.name} is currently unavailable. 
-              Using cached data where applicable.
+              Using encrypted cached data where applicable.
             </span>
-            <Button variant="outline" size="sm" className="ml-4">
+            <Button className="ml-4 bg-amber-600 hover:bg-amber-700 text-white" size="sm">
               <RefreshCw className="h-3 w-3 mr-1" />
               Retry Connection
             </Button>
