@@ -11,7 +11,7 @@ export default function Footer() {
   return (
     <footer className="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 px-4 sm:px-6 py-4 shadow-sm">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
-        {/* Bureau Status */}
+        {/* Bureau Status
         <div className="flex items-center">
           {allOnline ? (
             <Alert className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 py-1 px-3">
@@ -33,7 +33,7 @@ export default function Footer() {
               </div>
             </Alert>
           )}
-        </div>
+        </div> */}
 
         {/* Copyright */}
         <div className="text-gray-500 dark:text-gray-400 font-medium">

@@ -44,9 +44,9 @@ export default function Dashboard() {
   const getRiskBadgeVariant = (riskLevel: string) => {
     switch (riskLevel) {
       case "Low":
-        return "success";
+        return "default";
       case "Moderate":
-        return "warning";
+        return "secondary";
       default:
         return "destructive";
     }
@@ -55,7 +55,7 @@ export default function Dashboard() {
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
       case "Approved":
-        return "success";
+        return "default";
       case "Denied":
         return "destructive";
       default:
@@ -73,10 +73,10 @@ export default function Dashboard() {
           </div>
           <p className="text-blue-600 mt-1 ml-11">Protected credit lookup activity overview</p>
         </div>
-        <Button className="w-fit bg-blue-600 hover:bg-blue-700 text-white">
+        {/* <Button className="w-fit bg-blue-600 hover:bg-blue-700 text-white">
           <RefreshCw className="h-4 w-4 mr-2" />
           Refresh Data
-        </Button>
+        </Button> */}
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -121,7 +121,7 @@ export default function Dashboard() {
                     </div>
                     <span className="text-sm text-cyan-600">{bureau.uptime}%</span>
                   </div>
-                  <Progress value={bureau.uptime} className="h-2 bg-cyan-100" indicatorClassName="bg-cyan-500" />
+                  <Progress value={bureau.uptime} className="h-2 bg-cyan-500" />
                 </div>
               ))}
             </div>
@@ -160,7 +160,7 @@ export default function Dashboard() {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={getStatusBadgeVariant(borrower.status)} className="px-3 py-1">
+                    <Badge variant={getStatusBadgeVariant(borrower.status ?? "Unknown")} className="px-3 py-1">
                       {borrower.status}
                     </Badge>
                   </TableCell>
@@ -183,16 +183,15 @@ export default function Dashboard() {
             </TableBody>
           </Table>
         </CardContent>
-        <CardFooter className="border-t border-blue-100 flex justify-between items-center pt-6 bg-blue-50 rounded-b-lg">
+        {/* <CardFooter className="border-t border-blue-100 flex justify-between items-center pt-6 bg-blue-50 rounded-b-lg">
           <p className="text-sm text-blue-600">Showing {mockBorrowers.length} secured records</p>
           <Button className="bg-blue-600 hover:bg-blue-700 text-white" size="sm">View All Activity</Button>
-        </CardFooter>
+        </CardFooter> */}
       </Card>
 
-      {bureauStatus.some(bureau => bureau.status === "Offline") && (
+      {/* {bureauStatus.some(bureau => bureau.status === "Offline") && (
         <Alert className="bg-amber-50 border-2 border-amber-300 text-amber-800">
           <AlertCircle className="h-5 w-5 text-amber-600" />
-          <AlertTitle className="text-amber-800 font-bold">Bureau Downtime Alert</AlertTitle>
           <AlertDescription className="flex justify-between items-center">
             <span>
               {bureauStatus.find(b => b.status === "Offline")?.name} is currently unavailable. 
@@ -204,7 +203,7 @@ export default function Dashboard() {
             </Button>
           </AlertDescription>
         </Alert>
-      )}
+      )} */}
     </div>
   );
 }

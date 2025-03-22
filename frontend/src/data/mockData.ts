@@ -30,7 +30,7 @@ export const mockBorrowers: BorrowerProfile[] = [
     name: 'Michael Brown',
     unifiedScore: 550,
     equifaxScore: 540,
-    experianScore: null,
+    experianScore: undefined,
     transunionScore: 560,
     riskLevel: 'High',
     confidenceScore: 85,

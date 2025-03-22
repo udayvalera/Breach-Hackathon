@@ -9,7 +9,6 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Badge } from "../components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 
-
 // Gauge Component
 interface GaugeProps {
   value: number;
@@ -29,14 +28,14 @@ const Gauge: React.FC<GaugeProps> = ({ value, min, max, label }) => {
         <path
           d="M 10 45 A 40 40 0 0 1 90 45"
           fill="none"
-          stroke="#a78bfa" // Lighter purple shade
+          stroke="#a78bfa"
           strokeWidth="8"
           strokeDasharray="125.6"
           strokeDashoffset={125.6 * (1 - percentage / 100)}
         />
       </svg>
       <div
-        className="absolute w-1 h-16 bg-purple-400 origin-bottom" // Lighter needle color
+        className="absolute w-1 h-16 bg-purple-400 origin-bottom"
         style={{ left: "50%", bottom: "10%", transform: `translateX(-50%) rotate(${angle}deg)` }}
       />
       <div className="absolute inset-x-0 bottom-0 flex justify-between text-sm text-gray-800 font-semibold">
@@ -49,7 +48,7 @@ const Gauge: React.FC<GaugeProps> = ({ value, min, max, label }) => {
   );
 };
 
-// Mock bureau data (all bureaus working)
+// Mock bureau data
 const mockBureauData = [
   { bureau: "Equifax", score: 720, status: "Online", lastUpdated: "2025-03-21T10:30:00", history: [
     { type: "Loan", status: "Active", amount: 400000 },
@@ -86,14 +85,6 @@ interface CreditAssessment {
   recommendations: string[];
 }
 
-interface Toast {
-  id: number;
-  title: string;
-  description?: string;
-  duration?: number;
-  className?: string;
-}
-
 const CreditLookup: React.FC = () => {
   const [showNewAppModal, setShowNewAppModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -104,25 +95,13 @@ const CreditLookup: React.FC = () => {
   const [aadharCard, setAadharCard] = useState("");
   const [panCard, setPanCard] = useState("");
   const [creditAssessment, setCreditAssessment] = useState<CreditAssessment | null>(null);
-  const [toasts, setToasts] = useState<Toast[]>([]);
-
-  const toast = ({ title, description, duration = 3000, className }: Omit<Toast, 'id'>) => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, title, description, duration, className }]);
-    setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), duration);
-  };
 
   const handleNewApplicationSubmit = (data: { applicationName: string; borrowerName: string; description: string }) => {
-    try {
-      setApplicationName(data.applicationName);
-      setBorrowerName(data.borrowerName);
-      setDescription(data.description);
-      setShowNewAppModal(false);
-      setShowDetailsModal(true);
-      toast({ title: "Success", description: "New application created successfully", className: "bg-emerald-50 border-emerald-200 text-emerald-800" });
-    } catch (error) {
-      toast({ title: "Error", description: "Failed to create new application", className: "bg-red-50 border-red-200 text-red-800" });
-    }
+    setApplicationName(data.applicationName);
+    setBorrowerName(data.borrowerName);
+    setDescription(data.description);
+    setShowNewAppModal(false);
+    setShowDetailsModal(true);
   };
 
   const handleDocumentSubmit = (data: { aadharCard: string; panCard: string }) => {
@@ -130,7 +109,6 @@ const CreditLookup: React.FC = () => {
     setPanCard(data.panCard);
     setShowDetailsModal(false);
     setShowFetchingModal(true);
-    toast({ title: "Processing", description: "Fetching credit information...", duration: 2000, className: "bg-blue-50 border-blue-200 text-blue-800" });
   };
 
   const handleFetchComplete = (data: any) => {
@@ -159,7 +137,6 @@ const CreditLookup: React.FC = () => {
       recommendations: ["Maintain timely repayments", "Monitor credit utilization"],
     });
     setShowFetchingModal(false);
-    toast({ title: "Complete", description: "Credit assessment generated successfully", className: "bg-emerald-50 border-emerald-200 text-emerald-800" });
   };
 
   const resetApplication = () => {
@@ -190,10 +167,10 @@ const CreditLookup: React.FC = () => {
           </div>
           <p className="text-blue-600 mt-1 ml-11">Secure unified credit assessment system</p>
         </div>
-        <Button className="bg-purple-600 hover:bg-purple-700" onClick={() => setShowNewAppModal(true)}>
+        {/* <Button className="bg-purple-600 hover:bg-purple-700" onClick={() => setShowNewAppModal(true)}>
           <Plus className="h-4 w-4 mr-2" />
           New Application
-        </Button>
+        </Button> */}
       </div>
 
       <Dialog open={showNewAppModal} onOpenChange={setShowNewAppModal}>
@@ -256,7 +233,7 @@ const CreditLookup: React.FC = () => {
             <DialogTitle className="text-blue-800 flex items-center"><Shield className="h-5 w-5 mr-2 text-blue-600" />Fetching Credit Information</DialogTitle>
             <DialogDescription className="text-blue-600">Retrieving credit information from multiple bureaus</DialogDescription>
           </DialogHeader>
-          <FetchingStatusModal open={showFetchingModal} onClose={() => setShowFetchingModal(false)} onComplete={handleFetchComplete} toast={toast} />
+          <FetchingStatusModal open={showFetchingModal} onClose={() => setShowFetchingModal(false)} onComplete={handleFetchComplete} />
         </DialogContent>
       </Dialog>
 
@@ -381,15 +358,6 @@ const CreditLookup: React.FC = () => {
           </CardFooter>
         </Card>
       )}
-
-      <div className="fixed bottom-4 right-4 space-y-2">
-        {toasts.map((t) => (
-          <div key={t.id} className={`p-4 rounded-md shadow-lg border ${t.className || "bg-gray-800 text-white"}`}>
-            <h3 className="font-bold">{t.title}</h3>
-            {t.description && <p>{t.description}</p>}
-          </div>
-        ))}
-      </div>
     </div>
   );
 };
@@ -399,8 +367,7 @@ const FetchingStatusModal: React.FC<{
   open: boolean;
   onClose: () => void;
   onComplete: (data: any) => void;
-  toast: (toast: omit<Toast, 'id'>) => void;
-}> = ({ open, onClose, onComplete, toast }) => {
+}> = ({ open, onClose, onComplete }) => {
   const [bureaus, setBureaus] = useState<{ name: string; status: string; data: { score: number; history: { type: string; status: string; amount: number }[] } | null }[]>([
     { name: "Equifax", status: "pending", data: null },
     { name: "TransUnion", status: "pending", data: null },
@@ -410,28 +377,32 @@ const FetchingStatusModal: React.FC<{
   useEffect(() => {
     if (!open) return;
 
-    const fetchData = async () => {
-      // Simulate fetching with a 2-second total delay
+    const simulateFetch = async () => {
+      // Show fetching state for 1 second
       setBureaus(prev => prev.map(b => ({ ...b, status: "fetching" })));
-      await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second for "fetching" state
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      setBureaus(prev => prev.map(b => {
+      // Update with mock data
+      const updatedBureaus = bureaus.map(b => {
         const bureauData = mockBureauData.find(md => md.bureau === b.name);
         return {
           ...b,
           status: "success",
           data: bureauData ? { score: bureauData.score, history: bureauData.history } : null,
         };
-      }));
+      });
+      
+      setBureaus(updatedBureaus);
 
-      await new Promise(resolve => setTimeout(resolve, 1000)); // 1 more second before completion
-      onComplete({ bureaus });
+      // Wait another second then complete
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Call onComplete with the updated bureaus
+      onComplete({ bureaus: updatedBureaus });
     };
 
-    fetchData().catch(() => {
-      toast({ title: "Error", description: "Failed to fetch credit information", className: "bg-red-50 border-red-200 text-red-800" });
-    });
-  }, [open, onComplete, toast]);
+    simulateFetch();
+  }, [open, onComplete]);
 
   const getStatusColor = (status: string) => {
     switch (status) {

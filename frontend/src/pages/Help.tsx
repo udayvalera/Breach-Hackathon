@@ -161,14 +161,14 @@ export default function Help() {
                   <AccordionContent>
                     <div className="space-y-4">
                       <div className="flex items-start">
-                        <Badge variant="success" className="mt-1">Low Risk</Badge>
+                        <Badge variant="default" className="mt-1">Low Risk</Badge>
                         <p className="text-slate-600 ml-3">
                           Indicates a highly creditworthy borrower with strong repayment history. Generally corresponds to scores above 700.
                         </p>
                       </div>
                       
                       <div className="flex items-start">
-                        <Badge variant="warning" className="mt-1">Moderate Risk</Badge>
+                        <Badge variant="secondary" className="mt-1">Moderate Risk</Badge>
                         <p className="text-slate-600 ml-3">
                           Indicates an average creditworthy borrower who may have some minor issues in their credit history. Generally corresponds to scores between 600-700.
                         </p>

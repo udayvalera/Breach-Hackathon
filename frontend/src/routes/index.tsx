@@ -1,7 +1,7 @@
 // routes/index.tsx
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { Auth } from '../components/Auth';
-import { ProtectedRoute } from '../App';
+import { Auth as AuthComponent } from '../components/Auth';
+import ProtectedRoute from '../App';
 
 const Home = () => {
   const { user, signOut } = useAuth();
@@ -22,7 +22,7 @@ const Home = () => {
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/login" element={<Auth />} />
+      <Route path="/login" element={<AuthComponent />} />
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Home />} />
         {/* Add more protected routes here as needed */}
@@ -35,7 +35,7 @@ const AppRoutes = () => {
 export default AppRoutes;
 
 // components/Auth.tsx (example implementation)
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 
 export const Auth: React.FC = () => {
@@ -119,3 +119,30 @@ export const Auth: React.FC = () => {
     </div>
   );
 };
+function useAuth(): { user: any; signOut: any; } {
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+    };
+
+    fetchSession();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => {
+      authListener?.subscription.unsubscribe();
+    };
+  }, []);
+
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+  };
+
+  return { user, signOut };
+}
