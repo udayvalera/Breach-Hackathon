@@ -60,18 +60,6 @@ function App() {
     <ThemeContext.Provider value={{ theme, setTheme }}>
       <Router>
         <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-150">
-          <Header>
-            <button 
-              className="p-2 rounded-full hover:bg-accent"
-              onClick={toggleTheme}
-              aria-label="Toggle theme"
-            >
-              {theme === 'dark' ? 
-                <SunIcon className="h-5 w-5" /> : 
-                <MoonIcon className="h-5 w-5" />
-              }
-            </button>
-          </Header>
           
           <div className="flex flex-1 overflow-hidden">
             <Sidebar />
