@@ -1,4 +1,27 @@
 import React, { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
+import { Slider } from "@/components/ui/slider";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Moon, Sun, Shield, Bell, Key } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 const Settings: React.FC = () => {
   // State for settings
@@ -15,6 +38,7 @@ const Settings: React.FC = () => {
   const [apiKey, setApiKey] = useState("mock-api-key-12345");
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showApiModal, setShowApiModal] = useState(false);
+  const [activeTab, setActiveTab] = useState("bureaus");
 
   // Handle bureau preference toggles
   const handleBureauToggle = (key: keyof typeof bureauPrefs) => {
@@ -24,9 +48,14 @@ const Settings: React.FC = () => {
     }));
   };
 
-  // Handle discrepancy alert toggle and threshold
+  // Handle discrepancy alert toggle
   const handleDiscrepancyAlert = () => {
     setDiscrepancyAlert(!discrepancyAlert);
+  };
+
+  // Handle discrepancy threshold
+  const handleThresholdChange = (values: number[]) => {
+    setDiscrepancyThreshold(values[0]);
   };
 
   // Simulate saving API key (mocked)
@@ -44,159 +73,243 @@ const Settings: React.FC = () => {
   };
 
   return (
-    <div className={`p-6 min-h-screen ${isDarkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-800"}`}>
-      <h1 className="text-2xl font-bold mb-6">Settings</h1>
+    <div className={`p-6 min-h-screen ${isDarkMode ? "bg-slate-900 text-slate-50" : "bg-slate-50 text-slate-900"}`}>
+      <div className="max-w-4xl mx-auto">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold">Settings</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">
+            Configure your credit lookup preferences
+          </p>
+        </header>
 
-      {/* Bureau Preferences */}
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow mb-6">
-        <h2 className="text-xl font-semibold mb-4">Bureau Preferences</h2>
-        <div className="space-y-4">
-          <div>
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={bureauPrefs.prioritizeEquifax}
-                onChange={() => handleBureauToggle("prioritizeEquifax")}
-                className="h-4 w-4 text-blue-600"
-              />
-              <span>Prioritize Equifax</span>
-            </label>
-            <label className="flex items-center space-x-2 mt-2">
-              <input
-                type="checkbox"
-                checked={bureauPrefs.ignoreEquifax}
-                onChange={() => handleBureauToggle("ignoreEquifax")}
-                className="h-4 w-4 text-blue-600"
-              />
-              <span>Ignore Equifax if unavailable</span>
-            </label>
-          </div>
-          <div>
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={bureauPrefs.prioritizeTransUnion}
-                onChange={() => handleBureauToggle("prioritizeTransUnion")}
-                className="h-4 w-4 text-blue-600"
-              />
-              <span>Prioritize TransUnion</span>
-            </label>
-            <label className="flex items-center space-x-2 mt-2">
-              <input
-                type="checkbox"
-                checked={bureauPrefs.ignoreTransUnion}
-                onChange={() => handleBureauToggle("ignoreTransUnion")}
-                className="h-4 w-4 text-blue-600"
-              />
-              <span>Ignore TransUnion if unavailable</span>
-            </label>
-          </div>
-          <div>
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={bureauPrefs.prioritizeExperian}
-                onChange={() => handleBureauToggle("prioritizeExperian")}
-                className="h-4 w-4 text-blue-600"
-              />
-              <span>Prioritize Experian</span>
-            </label>
-            <label className="flex items-center space-x-2 mt-2">
-              <input
-                type="checkbox"
-                checked={bureauPrefs.ignoreExperian}
-                onChange={() => handleBureauToggle("ignoreExperian")}
-                className="h-4 w-4 text-blue-600"
-              />
-              <span>Ignore Experian if unavailable</span>
-            </label>
-          </div>
-        </div>
-      </div>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="mb-4">
+            <TabsTrigger value="bureaus">Credit Bureaus</TabsTrigger>
+            <TabsTrigger value="notifications">Notifications</TabsTrigger>
+            <TabsTrigger value="integration">API Integration</TabsTrigger>
+            <TabsTrigger value="appearance">Appearance</TabsTrigger>
+          </TabsList>
 
-      {/* Notification Settings */}
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow mb-6">
-        <h2 className="text-xl font-semibold mb-4">Notification Settings</h2>
-        <label className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            checked={discrepancyAlert}
-            onChange={handleDiscrepancyAlert}
-            className="h-4 w-4 text-blue-600"
-          />
-          <span>Show alerts for score discrepancies</span>
-        </label>
-        {discrepancyAlert && (
-          <div className="mt-4">
-            <label className="block mb-2">Discrepancy Threshold</label>
-            <input
-              type="number"
-              value={discrepancyThreshold}
-              onChange={(e) => setDiscrepancyThreshold(Number(e.target.value))}
-              className="w-24 p-2 border rounded dark:bg-gray-700 dark:text-white"
-              min={10}
-              max={100}
-            />
-            <span className="ml-2">points</span>
-          </div>
-        )}
-      </div>
+          {/* Bureau Preferences */}
+          <TabsContent value="bureaus">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Shield className="h-5 w-5 mr-2" />
+                  Bureau Preferences
+                </CardTitle>
+                <CardDescription>
+                  Configure how credit scores are collected and prioritized from different bureaus
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Equifax */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium">Equifax</h3>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="prioritizeEquifax" className="flex-1">Prioritize Equifax scores</Label>
+                    <Switch
+                      id="prioritizeEquifax"
+                      checked={bureauPrefs.prioritizeEquifax}
+                      onCheckedChange={() => handleBureauToggle("prioritizeEquifax")}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="ignoreEquifax" className="flex-1">Ignore if unavailable</Label>
+                    <Switch
+                      id="ignoreEquifax"
+                      checked={bureauPrefs.ignoreEquifax}
+                      onCheckedChange={() => handleBureauToggle("ignoreEquifax")}
+                    />
+                  </div>
+                </div>
+                
+                <Separator />
 
-      {/* API Integration */}
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow mb-6">
-        <h2 className="text-xl font-semibold mb-4">API Integration</h2>
-        <p className="mb-2">Current API Key: {apiKey}</p>
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-          onClick={() => setShowApiModal(true)}
-        >
-          Edit API Key
-        </button>
-      </div>
+                {/* TransUnion */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium">TransUnion</h3>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="prioritizeTransUnion" className="flex-1">Prioritize TransUnion scores</Label>
+                    <Switch
+                      id="prioritizeTransUnion"
+                      checked={bureauPrefs.prioritizeTransUnion}
+                      onCheckedChange={() => handleBureauToggle("prioritizeTransUnion")}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="ignoreTransUnion" className="flex-1">Ignore if unavailable</Label>
+                    <Switch
+                      id="ignoreTransUnion"
+                      checked={bureauPrefs.ignoreTransUnion}
+                      onCheckedChange={() => handleBureauToggle("ignoreTransUnion")}
+                    />
+                  </div>
+                </div>
+                
+                <Separator />
 
-      {/* Theme Toggle */}
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-        <h2 className="text-xl font-semibold mb-4">Theme</h2>
-        <label className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            checked={isDarkMode}
-            onChange={toggleTheme}
-            className="h-4 w-4 text-blue-600"
-          />
-          <span>Dark Mode</span>
-        </label>
+                {/* Experian */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium">Experian</h3>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="prioritizeExperian" className="flex-1">Prioritize Experian scores</Label>
+                    <Switch
+                      id="prioritizeExperian"
+                      checked={bureauPrefs.prioritizeExperian}
+                      onCheckedChange={() => handleBureauToggle("prioritizeExperian")}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="ignoreExperian" className="flex-1">Ignore if unavailable</Label>
+                    <Switch
+                      id="ignoreExperian" 
+                      checked={bureauPrefs.ignoreExperian}
+                      onCheckedChange={() => handleBureauToggle("ignoreExperian")}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Notification Settings */}
+          <TabsContent value="notifications">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Bell className="h-5 w-5 mr-2" />
+                  Notification Settings
+                </CardTitle>
+                <CardDescription>
+                  Configure alerts and notification preferences
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="discrepancyAlert" className="flex-1">
+                    Show alerts for score discrepancies
+                  </Label>
+                  <Switch
+                    id="discrepancyAlert"
+                    checked={discrepancyAlert}
+                    onCheckedChange={handleDiscrepancyAlert}
+                  />
+                </div>
+
+                {discrepancyAlert && (
+                  <div className="space-y-3 mt-4">
+                    <div className="flex justify-between">
+                      <Label>Discrepancy Threshold: {discrepancyThreshold} points</Label>
+                    </div>
+                    <Slider
+                      value={[discrepancyThreshold]}
+                      min={10}
+                      max={100}
+                      step={5}
+                      onValueChange={handleThresholdChange}
+                      className="w-full"
+                    />
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                      Alert when scores differ by {discrepancyThreshold} points or more
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* API Integration */}
+          <TabsContent value="integration">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Key className="h-5 w-5 mr-2" />
+                  API Integration
+                </CardTitle>
+                <CardDescription>
+                  Manage your API keys and integration settings
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-md">
+                  <p className="text-sm font-medium mb-1">Current API Key</p>
+                  <div className="flex items-center">
+                    <code className="bg-slate-200 dark:bg-slate-700 px-2 py-1 rounded text-sm font-mono flex-1 truncate">
+                      {apiKey}
+                    </code>
+                  </div>
+                </div>
+                <Button onClick={() => setShowApiModal(true)}>
+                  Change API Key
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Theme Toggle */}
+          <TabsContent value="appearance">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  {isDarkMode ? 
+                    <Moon className="h-5 w-5 mr-2" /> : 
+                    <Sun className="h-5 w-5 mr-2" />
+                  }
+                  Appearance
+                </CardTitle>
+                <CardDescription>
+                  Customize the look and feel of the application
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <Label htmlFor="darkMode">Dark Mode</Label>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                      Switch between light and dark themes
+                    </p>
+                  </div>
+                  <Switch
+                    id="darkMode"
+                    checked={isDarkMode}
+                    onCheckedChange={toggleTheme}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
 
       {/* API Key Modal */}
-      {showApiModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Edit API Key</h2>
-            <input
-              type="text"
+      <Dialog open={showApiModal} onOpenChange={setShowApiModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit API Key</DialogTitle>
+            <DialogDescription>
+              Update your API key for credit bureau integration
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <Label htmlFor="apiKey" className="mb-2 block">API Key</Label>
+            <Input
+              id="apiKey"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
-              className="w-full p-2 border rounded mb-4 dark:bg-gray-700 dark:text-white"
               placeholder="Enter API Key"
             />
-            <div className="flex justify-end space-x-4">
-              <button
-                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-                onClick={() => setShowApiModal(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                onClick={saveApiKey}
-              >
-                Save
-              </button>
-            </div>
           </div>
-        </div>
-      )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowApiModal(false)}>
+              Cancel
+            </Button>
+            <Button onClick={saveApiKey}>
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

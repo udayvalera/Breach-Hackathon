@@ -5,8 +5,15 @@ import {
   Activity,
   AlertCircle,
   Download,
+  RefreshCw
 } from "lucide-react";
 import { mockBorrowers, bureauStatus } from "../data/mockData";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Progress } from "@/components/ui/progress";
 
 export default function Dashboard() {
   const totalLookups = mockBorrowers.length;
@@ -33,123 +40,163 @@ export default function Dashboard() {
     window.URL.revokeObjectURL(url);
   };
 
+  const getRiskBadgeVariant = (riskLevel: string) => {
+    switch (riskLevel) {
+      case "Low":
+        return "success";
+      case "Moderate":
+        return "warning";
+      default:
+        return "destructive";
+    }
+  };
+
+  const getStatusBadgeVariant = (status: string) => {
+    switch (status) {
+      case "Approved":
+        return "success";
+      case "Denied":
+        return "destructive";
+      default:
+        return "secondary";
+    }
+  };
+
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+    <div className="p-6 space-y-6 bg-slate-50 min-h-screen">
+      <div className="flex flex-col md:flex-row justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
+          <p className="text-slate-500 mt-1">Overview of credit lookup activity</p>
+        </div>
+        <Button variant="outline" className="w-fit">
+          <RefreshCw className="h-4 w-4 mr-2" />
+          Refresh Data
+        </Button>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center">
-            <Users className="h-10 w-10 text-blue-500" />
-            <div className="ml-4">
-              <h3 className="text-lg font-semibold text-gray-700">Total Lookups Today</h3>
-              <p className="text-2xl font-bold text-gray-900">{totalLookups} Borrowers</p>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-slate-500">Total Lookups Today</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center">
+              <Users className="h-8 w-8 text-blue-500 mr-3" />
+              <div className="text-2xl font-bold">{totalLookups} <span className="text-slate-500 text-lg font-normal">Borrowers</span></div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center">
-            <TrendingUp className="h-10 w-10 text-green-500" />
-            <div className="ml-4">
-              <h3 className="text-lg font-semibold text-gray-700">Average Unified Score</h3>
-              <p className="text-2xl font-bold text-gray-900">{averageScore}</p>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-slate-500">Average Unified Score</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center">
+              <TrendingUp className="h-8 w-8 text-green-500 mr-3" />
+              <div className="text-2xl font-bold">{averageScore}</div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center">
-            <Activity className="h-10 w-10 text-purple-500" />
-            <div className="ml-4">
-              <h3 className="text-lg font-semibold text-gray-700">Bureau Uptime</h3>
-              <div className="space-y-1 mt-2">
-                {bureauStatus.map(bureau => (
-                  <div key={bureau.name} className="flex items-center text-sm">
-                    <span className={`w-2 h-2 rounded-full mr-2 ${
-                      bureau.status === "Online" ? "bg-green-500" : "bg-red-500"
-                    }`}></span>
-                    <span>{bureau.name}: {bureau.uptime}%</span>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-slate-500">Bureau Uptime</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {bureauStatus.map(bureau => (
+                <div key={bureau.name}>
+                  <div className="flex justify-between items-center mb-1">
+                    <div className="flex items-center">
+                      <span className={`w-2 h-2 rounded-full mr-2 ${
+                        bureau.status === "Online" ? "bg-green-500" : "bg-red-500"
+                      }`}></span>
+                      <span className="text-sm font-medium">{bureau.name}</span>
+                    </div>
+                    <span className="text-sm text-slate-500">{bureau.uptime}%</span>
                   </div>
-                ))}
-              </div>
+                  <Progress value={bureau.uptime} className="h-1" />
+                </div>
+              ))}
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
-      <div className="bg-white rounded-lg shadow">
-        <div className="p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="text-left text-sm text-gray-500 border-b">
-                  <th className="pb-3">Borrower</th>
-                  <th className="pb-3">Score</th>
-                  <th className="pb-3">Risk Level</th>
-                  <th className="pb-3">Status</th>
-                  <th className="pb-3">Time</th>
-                  <th className="pb-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {mockBorrowers.map(borrower => (
-                  <tr key={borrower.id} className="border-b last:border-0">
-                    <td className="py-3">{borrower.name}</td>
-                    <td className="py-3">{borrower.unifiedScore}</td>
-                    <td className="py-3">
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        borrower.riskLevel === "Low" ? "bg-green-100 text-green-800" :
-                        borrower.riskLevel === "Moderate" ? "bg-yellow-100 text-yellow-800" :
-                        "bg-red-100 text-red-800"
-                      }`}>
-                        {borrower.riskLevel} Risk
-                      </span>
-                    </td>
-                    <td className="py-3">
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        borrower.status === "Approved" ? "bg-green-100 text-green-800" :
-                        borrower.status === "Denied" ? "bg-red-100 text-red-800" :
-                        "bg-gray-100 text-gray-800"
-                      }`}>
-                        {borrower.status}
-                      </span>
-                    </td>
-                    <td className="py-3 text-gray-500">
-                      {new Date(borrower.lastUpdated).toLocaleTimeString()}
-                    </td>
-                    <td className="py-3">
-                      <button
-                        onClick={() => downloadReport(borrower)}
-                        className="flex items-center text-blue-600 hover:text-blue-800"
-                        title="Download Report"
-                      >
-                        <Download className="h-4 w-4 mr-1" />
-                        <span className="text-sm">Report</span>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Activity</CardTitle>
+          <CardDescription>Latest credit assessment results</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Borrower</TableHead>
+                <TableHead>Score</TableHead>
+                <TableHead>Risk Level</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Time</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {mockBorrowers.map(borrower => (
+                <TableRow key={borrower.id}>
+                  <TableCell className="font-medium">{borrower.name}</TableCell>
+                  <TableCell>{borrower.unifiedScore}</TableCell>
+                  <TableCell>
+                    <Badge variant={getRiskBadgeVariant(borrower.riskLevel)}>
+                      {borrower.riskLevel} Risk
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={getStatusBadgeVariant(borrower.status)}>
+                      {borrower.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-slate-500">
+                    {new Date(borrower.lastUpdated).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                  </TableCell>
+                  <TableCell>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => downloadReport(borrower)}
+                      className="h-8 px-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                    >
+                      <Download className="h-4 w-4 mr-1" />
+                      Report
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+        <CardFooter className="border-t flex justify-between items-center pt-6">
+          <p className="text-sm text-slate-500">Showing {mockBorrowers.length} records</p>
+          <Button variant="outline" size="sm">View All Activity</Button>
+        </CardFooter>
+      </Card>
 
       {bureauStatus.some(bureau => bureau.status === "Offline") && (
-        <div className="bg-orange-50 border-l-4 border-orange-400 p-4 rounded">
-          <div className="flex items-center">
-            <AlertCircle className="h-5 w-5 text-orange-400" />
-            <p className="ml-3 text-orange-700">
-              Bureau Downtime: {bureauStatus.find(b => b.status === "Offline")?.name} is currently unavailable. 
+        <Alert variant="warning">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Bureau Downtime Alert</AlertTitle>
+          <AlertDescription className="flex justify-between items-center">
+            <span>
+              {bureauStatus.find(b => b.status === "Offline")?.name} is currently unavailable. 
               Using cached data where applicable.
-            </p>
-            <button className="ml-auto bg-orange-100 text-orange-700 px-4 py-2 rounded hover:bg-orange-200">
+            </span>
+            <Button variant="outline" size="sm" className="ml-4">
+              <RefreshCw className="h-3 w-3 mr-1" />
               Retry Connection
-            </button>
-          </div>
-        </div>
+            </Button>
+          </AlertDescription>
+        </Alert>
       )}
     </div>
   );

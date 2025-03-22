@@ -22,38 +22,51 @@ export default function Sidebar() {
   const [collapsed, setCollapsed] = React.useState(false);
 
   return (
-    <aside 
-      className={`bg-gray-800 dark:bg-gray-900 text-white transition-all duration-300 ${
-        collapsed ? 'w-16' : 'w-64'
-      } min-h-screen flex flex-col fixed sm:relative z-40`}
-    >
-      <button
-        onClick={() => setCollapsed(!collapsed)}
-        className="p-4 hover:bg-gray-700 dark:hover:bg-gray-800 flex justify-end"
-      >
-        {collapsed ? (
-          <ChevronRight className="h-6 w-6" />
-        ) : (
-          <ChevronLeft className="h-6 w-6" />
-        )}
-      </button>
+    <>
+      {/* Mobile overlay */}
+      <div 
+        className={`fixed inset-0 bg-background/80 backdrop-blur-sm z-30 lg:hidden transition-opacity duration-200 ${
+          collapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}
+        onClick={() => setCollapsed(true)}
+      />
 
-      <nav className="flex-1">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={({ isActive }) =>
-              `flex items-center px-4 py-3 ${
-                isActive ? 'bg-gray-700 dark:bg-gray-800' : 'hover:bg-gray-700 dark:hover:bg-gray-800'
-              }`
-            }
+      {/* Sidebar */}
+      <aside 
+        className={`bg-card text-card-foreground shadow-lg transition-all duration-300 fixed lg:relative z-40
+          ${collapsed ? 'w-16 -translate-x-full lg:translate-x-0' : 'w-64'}`}
+      >
+        <div className="flex flex-col h-full">
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="p-4 hover:bg-accent flex justify-end"
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            <item.icon className="h-5 w-5" />
-            {!collapsed && <span className="ml-3">{item.label}</span>}
-          </NavLink>
-        ))}
-      </nav>
-    </aside>
+            {collapsed ? (
+              <ChevronRight className="h-6 w-6" />
+            ) : (
+              <ChevronLeft className="h-6 w-6" />
+            )}
+          </button>
+
+          <nav className="flex-1 overflow-y-auto">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  `flex items-center px-4 py-3 transition-colors
+                  ${isActive ? 'bg-accent text-accent-foreground' : 'hover:bg-accent/50'}
+                  ${collapsed ? 'justify-center' : ''}`
+                }
+              >
+                <item.icon className="h-5 w-5 flex-shrink-0" />
+                {!collapsed && <span className="ml-3">{item.label}</span>}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
+      </aside>
+    </>
   );
 }

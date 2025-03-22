@@ -1,5 +1,13 @@
 import React, { useState } from "react";
 import { Plus, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 
 // Mock bureau data for simulation
 const mockBureauData = [
@@ -7,6 +15,22 @@ const mockBureauData = [
   { bureau: "Experian", score: null, status: "Offline", lastUpdated: "2025-03-20T15:45:00" },
   { bureau: "TransUnion", score: 735, status: "Online", lastUpdated: "2025-03-21T10:30:00" },
 ];
+
+interface CreditBureau {
+  bureau: string;
+  score: number | null;
+  status: string;
+  lastUpdated: string;
+}
+
+interface CreditAssessment {
+  applicationName: string;
+  borrowerName: string;
+  unifiedScore: number;
+  bureauScores: CreditBureau[];
+  confidenceScore: number;
+  riskLevel: string;
+}
 
 const CreditLookup: React.FC = () => {
   // State for modals and application data
@@ -18,7 +42,7 @@ const CreditLookup: React.FC = () => {
   const [aadharCard, setAadharCard] = useState("");
   const [panCard, setPanCard] = useState("");
   const [isFetching, setIsFetching] = useState(false);
-  const [creditAssessment, setCreditAssessment] = useState<any>(null);
+  const [creditAssessment, setCreditAssessment] = useState<CreditAssessment | null>(null);
 
   // Handle form submission in New Application Modal
   const handleNewApplicationSubmit = (e: React.FormEvent) => {
@@ -53,179 +77,231 @@ const CreditLookup: React.FC = () => {
     }, 2000); // Simulate 2-second delay
   };
 
+  const getRiskBadgeStyle = (riskLevel: string) => {
+    switch (riskLevel) {
+      case "Low Risk":
+        return "bg-green-100 text-green-800 hover:bg-green-100";
+      case "Moderate Risk":
+        return "bg-yellow-100 text-yellow-800 hover:bg-yellow-100";
+      case "High Risk":
+        return "bg-red-100 text-red-800 hover:bg-red-100";
+      default:
+        return "bg-gray-100 text-gray-800 hover:bg-gray-100";
+    }
+  };
+
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div className="p-6 bg-slate-50 min-h-screen">
       {/* Header with New Application Button */}
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Credit Lookup</h1>
-        <button
-          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          onClick={() => setShowNewAppModal(true)}
-        >
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">Credit Lookup</h1>
+          <p className="text-slate-500 mt-1">Unified credit assessment system</p>
+        </div>
+        <Button onClick={() => setShowNewAppModal(true)}>
           <Plus className="h-4 w-4 mr-2" />
           New Application
-        </button>
+        </Button>
       </div>
 
       {/* New Application Modal */}
-      {showNewAppModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">New Application</h2>
-            <form onSubmit={handleNewApplicationSubmit}>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Application Name</label>
-                <input
-                  type="text"
+      <Dialog open={showNewAppModal} onOpenChange={setShowNewAppModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>New Application</DialogTitle>
+            <DialogDescription>
+              Create a new credit assessment application
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleNewApplicationSubmit}>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="applicationName">Application Name</Label>
+                <Input
+                  id="applicationName"
                   value={applicationName}
                   onChange={(e) => setApplicationName(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
               </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Borrower Name</label>
-                <input
-                  type="text"
+              <div className="space-y-2">
+                <Label htmlFor="borrowerName">Borrower Name</Label>
+                <Input
+                  id="borrowerName"
                   value={borrowerName}
                   onChange={(e) => setBorrowerName(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
               </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                <textarea
+              <div className="space-y-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   rows={3}
                 />
               </div>
-              <div className="flex justify-end space-x-4">
-                <button
-                  type="button"
-                  className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-                  onClick={() => setShowNewAppModal(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                >
-                  Next
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+            </div>
+            <DialogFooter>
+              <Button variant="outline" type="button" onClick={() => setShowNewAppModal(false)}>
+                Cancel
+              </Button>
+              <Button type="submit">Next</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       {/* Details Modal */}
-      {showDetailsModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Enter Identification Details</h2>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Aadhar Card</label>
-              <input
-                type="text"
+      <Dialog open={showDetailsModal} onOpenChange={setShowDetailsModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Enter Identification Details</DialogTitle>
+            <DialogDescription>
+              Provide identification documents to proceed with credit assessment
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="aadharCard">Aadhar Card</Label>
+              <Input
+                id="aadharCard"
                 value={aadharCard}
                 onChange={(e) => setAadharCard(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="XXXX-XXXX-XXXX"
                 required
               />
             </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">PAN Card</label>
-              <input
-                type="text"
+            <div className="space-y-2">
+              <Label htmlFor="panCard">PAN Card</Label>
+              <Input
+                id="panCard"
                 value={panCard}
                 onChange={(e) => setPanCard(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="ABCDE1234F"
                 required
               />
             </div>
-            <div className="flex justify-end space-x-4">
-              <button
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-                onClick={() => setShowDetailsModal(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400"
-                onClick={fetchCreditDetails}
-                disabled={isFetching || !aadharCard || !panCard}
-              >
-                {isFetching ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Fetching...
-                  </>
-                ) : (
-                  "Fetch Details"
-                )}
-              </button>
-            </div>
           </div>
-        </div>
-      )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowDetailsModal(false)}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={fetchCreditDetails}
+              disabled={isFetching || !aadharCard || !panCard}
+            >
+              {isFetching ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Fetching...
+                </>
+              ) : (
+                "Fetch Details"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Unified Credit Assessment */}
-      {creditAssessment && (
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Unified Credit Assessment</h2>
-          <div className="space-y-4">
-            <div>
-              <p className="text-sm text-gray-600">Application Name</p>
-              <p className="text-lg font-medium">{creditAssessment.applicationName}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Borrower Name</p>
-              <p className="text-lg font-medium">{creditAssessment.borrowerName}</p>
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Unified Score</p>
-                <p className="text-3xl font-bold text-blue-600">{creditAssessment.unifiedScore}</p>
+      {creditAssessment ? (
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle>Unified Credit Assessment</CardTitle>
+            <CardDescription>
+              Comprehensive credit report across multiple bureaus
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label className="text-sm text-slate-500">Application Name</Label>
+                <p className="text-lg font-medium">{creditAssessment.applicationName}</p>
               </div>
-              <span
-                className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  creditAssessment.riskLevel === "Low Risk"
-                    ? "text-green-600 bg-green-50"
-                    : creditAssessment.riskLevel === "Moderate Risk"
-                    ? "text-yellow-600 bg-yellow-50"
-                    : "text-red-600 bg-red-50"
-                }`}
-              >
-                {creditAssessment.riskLevel}
-              </span>
+              <div className="space-y-2">
+                <Label className="text-sm text-slate-500">Borrower Name</Label>
+                <p className="text-lg font-medium">{creditAssessment.borrowerName}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm text-gray-600">Score Confidence</p>
-              <p className="text-lg font-medium">{creditAssessment.confidenceScore}%</p>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Bureau Scores</h3>
-              {creditAssessment.bureauScores.map((bureau: any) => (
-                <div key={bureau.bureau} className="flex justify-between py-2 border-b">
-                  <span>{bureau.bureau}</span>
-                  <span
-                    className={bureau.status === "Offline" ? "text-orange-500" : "text-gray-800"}
-                  >
-                    {bureau.score !== null
-                      ? bureau.score
-                      : `Offline (Last: ${new Date(bureau.lastUpdated).toLocaleDateString()})`}
-                  </span>
+            
+            <div className="border rounded-lg p-6 bg-slate-50">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <Label className="text-sm text-slate-500">Unified Score</Label>
+                  <p className="text-5xl font-bold text-blue-600">{creditAssessment.unifiedScore}</p>
                 </div>
-              ))}
+                <Badge className={getRiskBadgeStyle(creditAssessment.riskLevel)}>
+                  {creditAssessment.riskLevel}
+                </Badge>
+              </div>
+              
+              <div className="space-y-2 mt-6">
+                <div className="flex justify-between">
+                  <Label className="text-sm text-slate-500">Score Confidence</Label>
+                  <span className="text-sm font-medium">{creditAssessment.confidenceScore}%</span>
+                </div>
+                <Progress value={creditAssessment.confidenceScore} className="h-2" />
+              </div>
             </div>
-          </div>
-        </div>
+            
+            <div>
+              <h3 className="text-lg font-medium mb-4">Bureau Scores</h3>
+              <div className="space-y-4">
+                {creditAssessment.bureauScores.map((bureau) => (
+                  <div key={bureau.bureau} className="flex items-center justify-between py-3 border-b">
+                    <div className="flex items-center">
+                      <div className={`w-2 h-2 rounded-full mr-2 ${bureau.status === "Online" ? "bg-green-500" : "bg-orange-500"}`}></div>
+                      <span className="font-medium">{bureau.bureau}</span>
+                    </div>
+                    <div className="text-right">
+                      {bureau.score !== null ? (
+                        <span className="text-lg font-semibold">{bureau.score}</span>
+                      ) : (
+                        <div>
+                          <Badge variant="outline" className="text-orange-500 border-orange-200 bg-orange-50">
+                            Offline
+                          </Badge>
+                          <p className="text-xs text-slate-500 mt-1">
+                            Last updated: {new Date(bureau.lastUpdated).toLocaleDateString()}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="border-t pt-6 flex justify-end">
+            <Button variant="outline" className="mr-2">Download Report</Button>
+            <Button>Apply for Loan</Button>
+          </CardFooter>
+        </Card>
+      ) : (
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle>No Active Assessment</CardTitle>
+            <CardDescription>
+              Start by creating a new credit assessment application
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <div className="bg-slate-100 p-6 rounded-full mb-4">
+              <Plus className="h-8 w-8 text-slate-400" />
+            </div>
+            <p className="text-slate-500 text-center max-w-md">
+              Create a new application to check unified credit scores across multiple bureaus and assess lending risk.
+            </p>
+          </CardContent>
+          <CardFooter className="border-t pt-6 flex justify-center">
+            <Button onClick={() => setShowNewAppModal(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              New Application
+            </Button>
+          </CardFooter>
+        </Card>
       )}
     </div>
   );

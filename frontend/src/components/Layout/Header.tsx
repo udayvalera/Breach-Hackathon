@@ -1,6 +1,32 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Bell, CreditCard, X } from 'lucide-react';
+import { Search, Bell, CreditCard, X, Sun, Moon } from 'lucide-react';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuGroup, 
+  DropdownMenuItem, 
+  DropdownMenuLabel, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardFooter, 
+  CardHeader, 
+  CardTitle 
+} from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 
 interface Notification {
   id: string;
@@ -65,93 +91,96 @@ export default function Header() {
     ));
   };
 
-  const getNotificationColor = (type: Notification['type']) => {
+  const getNotificationBadge = (type: Notification['type']) => {
     switch (type) {
       case 'warning':
-        return 'bg-yellow-50 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-100';
+        return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-200">Warning</Badge>;
       case 'error':
-        return 'bg-red-50 dark:bg-red-900 text-red-800 dark:text-red-100';
+        return <Badge variant="outline" className="bg-red-100 text-red-800 border-red-200">Error</Badge>;
       default:
-        return 'bg-blue-50 dark:bg-blue-900 text-blue-800 dark:text-blue-100';
+        return <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">Info</Badge>;
     }
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-4">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
-        <div className="flex items-center space-x-2 w-full sm:w-auto">
-          <CreditCard className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-          <h1 className="text-xl font-semibold text-gray-800 dark:text-white">Unified Credit System</h1>
+    <header className="sticky top-0 z-50 bg-background border-b shadow-sm px-4 py-3">
+      <div className="container mx-auto flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <CreditCard className="h-6 w-6 text-primary" />
+          <h1 className="text-xl font-semibold">Unified Credit System</h1>
         </div>
 
-        <form onSubmit={handleSearch} className="flex-1 max-w-2xl w-full sm:mx-8">
+        <form onSubmit={handleSearch} className="flex-1 max-w-md mx-6">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-            <input
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
               type="text"
               placeholder="Enter Borrower ID or Name"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className="w-full pl-9"
             />
           </div>
         </form>
 
-        <div className="flex items-center space-x-4">
-          <button
-            onClick={toggleDarkMode}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            {isDarkMode ? '🌞' : '🌙'}
-          </button>
+        <div className="flex items-center gap-3">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" onClick={toggleDarkMode}>
+                  {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Toggle theme</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
 
-          <div className="relative">
-            <button
-              onClick={() => setShowNotifications(!showNotifications)}
-              className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full"
-            >
-              <Bell className="h-6 w-6 text-gray-600 dark:text-gray-300" />
-              {unreadCount > 0 && (
-                <span className="absolute top-0 right-0 h-5 w-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                  {unreadCount}
-                </span>
-              )}
-            </button>
-
-            {/* Notifications Modal */}
-            {showNotifications && (
-              <div className="absolute right-0 mt-2 w-96 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Notifications</h2>
-                  <button
-                    onClick={() => setShowNotifications(false)}
-                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
+          <DropdownMenu open={showNotifications} onOpenChange={setShowNotifications}>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="relative">
+                <Bell className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute top-0 right-0 h-4 w-4 bg-destructive text-destructive-foreground text-xs rounded-full flex items-center justify-center text-[10px]">
+                    {unreadCount}
+                  </span>
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-[350px]">
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-sm font-semibold">Notifications</h2>
+                  <Button variant="ghost" size="sm" className="h-8 px-2">
+                    <span className="text-xs">Mark all as read</span>
+                  </Button>
                 </div>
-                <div className="max-h-96 overflow-y-auto">
-                  {notifications.map((notification) => (
-                    <div
-                      key={notification.id}
-                      className={`p-4 border-b border-gray-200 dark:border-gray-700 ${
-                        notification.read ? 'opacity-75' : ''
-                      } ${getNotificationColor(notification.type)}`}
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <div className="max-h-80 overflow-y-auto">
+                {notifications.map((notification) => (
+                  <DropdownMenuItem key={notification.id} className="cursor-pointer p-0">
+                    <div 
+                      className={`w-full p-3 ${!notification.read ? 'bg-muted/50' : ''}`}
                       onClick={() => markAsRead(notification.id)}
                     >
                       <div className="flex justify-between items-start mb-1">
-                        <h3 className="font-semibold">{notification.title}</h3>
-                        <span className="text-xs">
-                          {new Date(notification.timestamp).toLocaleTimeString()}
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-sm font-medium">{notification.title}</h3>
+                          {getNotificationBadge(notification.type)}
+                        </div>
+                        <span className="text-xs text-muted-foreground">
+                          {new Date(notification.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
-                      <p className="text-sm">{notification.message}</p>
+                      <p className="text-xs text-muted-foreground">{notification.message}</p>
                     </div>
-                  ))}
-                </div>
+                  </DropdownMenuItem>
+                ))}
               </div>
-            )}
-          </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>
