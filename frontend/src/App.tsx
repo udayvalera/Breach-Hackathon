@@ -89,7 +89,6 @@ function App() {
         <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-150">
           {user ? (
             <>
-              <Header />
               <div className="flex flex-1 overflow-hidden">
                 <Sidebar />
                 <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-background">
