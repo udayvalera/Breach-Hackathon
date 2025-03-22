@@ -73,10 +73,6 @@ export default function Dashboard() {
           </div>
           <p className="text-blue-600 mt-1 ml-11">Protected credit lookup activity overview</p>
         </div>
-        {/* <Button className="w-fit bg-blue-600 hover:bg-blue-700 text-white">
-          <RefreshCw className="h-4 w-4 mr-2" />
-          Refresh Data
-        </Button> */}
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -183,27 +179,7 @@ export default function Dashboard() {
             </TableBody>
           </Table>
         </CardContent>
-        {/* <CardFooter className="border-t border-blue-100 flex justify-between items-center pt-6 bg-blue-50 rounded-b-lg">
-          <p className="text-sm text-blue-600">Showing {mockBorrowers.length} secured records</p>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white" size="sm">View All Activity</Button>
-        </CardFooter> */}
       </Card>
-
-      {/* {bureauStatus.some(bureau => bureau.status === "Offline") && (
-        <Alert className="bg-amber-50 border-2 border-amber-300 text-amber-800">
-          <AlertCircle className="h-5 w-5 text-amber-600" />
-          <AlertDescription className="flex justify-between items-center">
-            <span>
-              {bureauStatus.find(b => b.status === "Offline")?.name} is currently unavailable. 
-              Using encrypted cached data where applicable.
-            </span>
-            <Button className="ml-4 bg-amber-600 hover:bg-amber-700 text-white" size="sm">
-              <RefreshCw className="h-3 w-3 mr-1" />
-              Retry Connection
-            </Button>
-          </AlertDescription>
-        </Alert>
-      )} */}
     </div>
   );
 }

@@ -22,13 +22,21 @@ const Gauge: React.FC<GaugeProps> = ({ value, min, max, label }) => {
   const angle = (percentage / 100) * 180 - 90;
 
   return (
-    <div className="relative w-40 h-20">
+    <div className="relative w-40 h-20 bg-white rounded-lg">
       <svg className="absolute w-full h-full" viewBox="0 0 100 50">
+        <defs>
+          <linearGradient id="gaugeGradient" gradientTransform="rotate(90)">
+            <stop offset="0%" stopColor="red" />
+            <stop offset="33%" stopColor="orange" />
+            <stop offset="66%" stopColor="yellow" />
+            <stop offset="100%" stopColor="green" />
+          </linearGradient>
+        </defs>
         <path d="M 10 45 A 40 40 0 0 1 90 45" fill="none" stroke="#e5e7eb" strokeWidth="8" />
         <path
           d="M 10 45 A 40 40 0 0 1 90 45"
           fill="none"
-          stroke="#a78bfa"
+          stroke="url(#gaugeGradient)"
           strokeWidth="8"
           strokeDasharray="125.6"
           strokeDashoffset={125.6 * (1 - percentage / 100)}
@@ -38,7 +46,8 @@ const Gauge: React.FC<GaugeProps> = ({ value, min, max, label }) => {
         className="absolute w-1 h-16 bg-purple-400 origin-bottom"
         style={{ left: "50%", bottom: "10%", transform: `translateX(-50%) rotate(${angle}deg)` }}
       />
-      <div className="absolute inset-x-0 bottom-0 flex justify-between text-sm text-gray-800 font-semibold">
+      {/* Moved min and max values lower by adjusting the bottom position */}
+      <div className="absolute inset-x-0 bottom-[-10px] flex justify-between text-sm text-gray-800 font-semibold">
         <span>{min}</span>
         <span>{max}</span>
       </div>
@@ -167,10 +176,6 @@ const CreditLookup: React.FC = () => {
           </div>
           <p className="text-blue-600 mt-1 ml-11">Secure unified credit assessment system</p>
         </div>
-        {/* <Button className="bg-purple-600 hover:bg-purple-700" onClick={() => setShowNewAppModal(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          New Application
-        </Button> */}
       </div>
 
       <Dialog open={showNewAppModal} onOpenChange={setShowNewAppModal}>
@@ -265,8 +270,9 @@ const CreditLookup: React.FC = () => {
                 <p className="text-sm text-cyan-800">Aadhar: XXXX XXXX {creditAssessment.aadharCard.slice(-4)}</p>
                 <p className="text-sm text-cyan-800">PAN: {creditAssessment.panCard}</p>
               </div>
-              <div className="bg-blue-600 text-white p-4 rounded-lg shadow-md">
-                <Label className="text-sm text-blue-100">Unified Score</Label>
+              {/* Changed background to white */}
+              <div className="bg-white p-4 rounded-lg shadow-md">
+                <Label className="text-sm text-blue-600">Unified Score</Label>
                 <Gauge value={creditAssessment.unifiedScore} min={350} max={800} />
                 <Badge className={`${getRiskBadgeColor(creditAssessment.riskLevel)} mt-2`}>{creditAssessment.riskLevel}</Badge>
               </div>

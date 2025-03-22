@@ -3,6 +3,7 @@ import numpy as np
 import joblib
 import sys
 import os
+import warnings
 
 def predict_credit_score(equifax, transunion, experian):
     # Get current directory (where this script is located)
@@ -16,8 +17,10 @@ def predict_credit_score(equifax, transunion, experian):
     # Prepare input as numpy array
     input_data = np.array([[equifax, transunion, experian]])
     
-    # Scale input
-    input_scaled = X_scaler.transform(input_data)
+    # Scale input - suppress warnings
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        input_scaled = X_scaler.transform(input_data)
     
     # Make prediction
     prediction_scaled = model.predict(input_scaled)
@@ -33,12 +36,14 @@ if __name__ == "__main__":
         sys.exit(1)
     
     try:
+        # Suppress all warnings
+        warnings.filterwarnings("ignore")
+        
         equifax = float(sys.argv[1])
         transunion = float(sys.argv[2])
         experian = float(sys.argv[3])
         
         prediction = predict_credit_score(equifax, transunion, experian)
-        print(f"Predicted unified credit score: {prediction:.2f}")
+        print(f"{prediction:.2f}")
     except Exception as e:
-        print(f"Error: {e}")
         sys.exit(1)
