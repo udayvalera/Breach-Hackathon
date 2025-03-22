@@ -18,5 +18,5 @@ async function getRandomData() {
 // Call the function and handle the result
 (async () => {
     const data = await getRandomData();
-    console.log("Random Data:", data);
+    console.log("Random Data:", JSON.stringify(data,null,2));
 })();
